@@ -15,7 +15,7 @@ Ambition: finished, because the build prompt says "Design Lounge, ambitiously" f
 Mode: Kit
 Named aesthetic: none
 Stack: Next.js 16 App Router, React 19, Tailwind 4, Motion, Dexie, Serwist (build prompt section 3)
-Missing: the public repo URL (assumed `github.com/SusanAcharya/masta-wastra`), app icon art, fixture garment photos.
+Missing: the public repo URL (assumed `github.com/SusanAcharya/Masta-Wastra`), app icon art, fixture garment photos.
 
 Hard limits:
 - No stock photos. Garments are the user's own cutouts; anything else is drawn in CSS or SVG.

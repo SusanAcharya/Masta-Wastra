@@ -1,6 +1,6 @@
 // Every user-facing string lives here. tests/unit/copy.test.ts bans long dashes.
 
-export const SOURCE_URL = "https://github.com/SusanAcharya/masta-wastra";
+export const SOURCE_URL = "https://github.com/SusanAcharya/Masta-Wastra";
 export const LOUNGE_URL = "https://www.designlounge.live";
 export const OPEN_METEO_URL = "https://open-meteo.com/";
 

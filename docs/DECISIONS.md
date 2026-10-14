@@ -34,7 +34,7 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-14. Theme mode lives in `localStorage` (`mw-theme`)**, read by a tiny inline script in `<head>` before first paint, so there is no flash. Dexie settings (M2) mirror it; localStorage stays the source for first paint.
 - **2026-10-14. Component CSS as CSS Modules** under `src/components/lounge/<piece-id>/`, layout utilities with Tailwind.
 - **2026-10-14. Planned for M7: item detail becomes a full screen layer on `/closet` (`/closet?item=<id>`)**, instead of a `/closet/[id]` route. Items live in IndexedDB, so a dynamic route cannot be precached for offline use, and `shared-element-expand` (`layoutId`) needs grid and detail in one React tree. Revisit if it fights the router.
-- **2026-10-14. Source link** points at `https://github.com/SusanAcharya/masta-wastra` (`SOURCE_URL` in `src/lib/copy.ts`). The repo does not exist yet; create it public before deploy (AGPL).
+- **2026-10-14. Source link** points at `https://github.com/SusanAcharya/Masta-Wastra` (`SOURCE_URL` in `src/lib/copy.ts`). Repo created by Susan 2026-10-14 (`SusanAcharya/Masta-Wastra`); keep it public (AGPL).
 - **2026-10-14. `.claude/skills/` is gitignored; `skills-lock.json` is committed.** The repo is public (AGPL) and Design Lounge asks not to republish the catalogue. Restore the skill with `npx skills experimental_install`.
 
 ## From the AI Studio rate limits (applies to M4)
