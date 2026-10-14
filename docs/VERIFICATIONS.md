@@ -78,4 +78,20 @@ Headless Chromium 1248 (Playwright) on an Apple Silicon Mac, `isnet_quint8`, CPU
 | First ever cutout incl. download | about 170 s on this connection | 44.3 MB model + 11.8 MB wasm + 25 KB mjs, matches resources.json |
 
 - `@imgly/background-removal` 1.7.0 works under Next 16.4 with Turbopack when imported only inside a module Web Worker (`new Worker(new URL(...), { type: "module" })`), despite the README's "only NextJS 15" note.
-- Real phones (mid Android, iPhone) still to be measured: see docs/DEVICE-CHECKS.md.
+- Real phones (mid Android, iPhone) still to be measured by Susan: see docs/DEVICE-CHECKS.md.
+
+## Production checks (2026-10-15, https://masta-wastra.vercel.app)
+
+| Check | Result |
+|---|---|
+| Deploys from `main` (GitHub commit status "Vercel: success") | Confirmed for every push |
+| Security headers on pages: COOP same-origin, COEP credentialless, CSP without `unsafe-eval`, Referrer-Policy, Permissions-Policy, nosniff | Confirmed (`curl -I`) |
+| Static files served under `/_next/static/immutable/` on Vercel (not `/_next/static/` as locally) | Different from local; CSP exception and service worker made path independent |
+| `crossOriginIsolated` in production | true |
+| Real cutout in production (IMG.LY CDN, under CSP, worker gets `unsafe-eval` only for its own script) | Works, about 7 s for the first piece including the model fetch |
+| `/api/install` issues a signed token | Works (INSTALL_SECRET set) |
+| `/api/tag` with a real cut-out | 200 with valid tags after the 10 s deadline fix (before: 502 for every call) |
+| Gemini on the free tier: tokens per item | about 400 (266 image at low media resolution), 1.4 s |
+| Service worker installs, caches 9 pages and their static files | Confirmed; every tab opens with the network off |
+| Lighthouse accessibility, all screens | 100 |
+| Lighthouse best practices | 96 before the zod `jitless` fix (CSP probe reported); no Chrome issues after |

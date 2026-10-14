@@ -201,3 +201,12 @@ Remember after five seconds: "a Didone 'No looks yet' on washed linen above a gl
 Correction: too much chrome. The About kicker repeated "Wastra" above "Masta Wastra" and again on the garment. Removed the kicker.
 Still open: app icons and splash (M8), the 200% text check, every piece marked M2 to M9 above
 ```
+
+## Closing block (M3 to M9)
+
+```
+Looked at: welcome 1-3, outfit (empty and with a pick), closet grid, item detail, history, settings, scan, about, at 390x844 in light and dark; the 15 photo journey screenshots (scan-15, pick-1, pick-worn, history, closet) with real cutouts; live production checks with Playwright Chromium. Real phones: not looked (docs/DEVICE-CHECKS.md)
+Remember after five seconds: "your own clothes, cut out, laid flat on linen, with one line on why they work" · could be anyone's: no
+Correction: too even. The flat lay put a dress under the coat in one column and left the other empty; a dress now takes the right column, alone it spans both.
+Still open: real device timings and checks, 200% text on a phone, real garment photos (fixtures are synthetic)
+```

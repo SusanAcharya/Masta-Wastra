@@ -67,3 +67,19 @@ describe("badges", () => {
     expect(earnedBadges([item({ category: "top", archived: true })])).toEqual([]);
   });
 });
+
+import { isDressable } from "@/lib/provisional";
+describe("which pieces may join outfits", () => {
+  const base = { archived: false, tagSource: "ai", tagStatus: "done" };
+  it("uses recognised and hand tagged pieces", () => {
+    expect(isDressable(base)).toBe(true);
+    expect(isDressable({ ...base, tagSource: "manual", tagStatus: "manual" })).toBe(true);
+    expect(isDressable({ ...base, tagSource: "ai-edited", tagStatus: "queued" })).toBe(true);
+  });
+  it("keeps out pieces still being recognised, untagged, unsure or retired", () => {
+    expect(isDressable({ ...base, tagStatus: "queued" })).toBe(false);
+    expect(isDressable({ ...base, tagSource: "manual", tagStatus: "pending" })).toBe(false);
+    expect(isDressable({ ...base, tagCheck: true })).toBe(false);
+    expect(isDressable({ ...base, archived: true })).toBe(false);
+  });
+});

@@ -58,7 +58,8 @@ export function PickScreen() {
   const [exit, setExit] = useState<1 | -1>(1);
 
   const dressable = items?.filter(isDressable) ?? [];
-  const waiting = (items?.length ?? 0) - dressable.length;
+  const checking = items?.filter((i) => !i.archived && i.tagCheck).length ?? 0;
+  const waiting = (items?.filter((i) => !i.archived).length ?? 0) - dressable.length - checking;
   const canDress =
     dressable.some((i) => i.category === "shoes") &&
     (dressable.some((i) => i.category === "dress") ||
@@ -372,6 +373,11 @@ export function PickScreen() {
         </p>
       ) : null}
       {waiting ? <p className="mt-2 text-[14px] text-ink-2">{copy.today.waiting(waiting)}</p> : null}
+      {checking ? (
+        <p className="mt-2 text-[14px] text-ink-2">
+          {copy.today.checking(checking)} <Link href="/closet">{copy.tabs.closet}</Link>
+        </p>
+      ) : null}
 
       <p className="sr-only" aria-live="polite">
         {announce}

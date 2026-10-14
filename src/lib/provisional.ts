@@ -25,8 +25,11 @@ export function provisionalTags(w: number, h: number) {
 }
 
 // Pieces the outfit engine may use: recognised by AI, or tagged or fixed by hand.
-export function isDressable(item: { tagStatus: string; tagSource: string; archived: boolean }) {
+export function isDressable(item: { tagStatus: string; tagSource: string; archived: boolean; tagCheck?: boolean }) {
   if (item.archived) return false;
+  // Gemini was unsure, or said it is not clothing: kept out until the user confirms the tags
+  // (any one tap fix clears tagCheck). A wrong piece would spoil the result.
+  if (item.tagCheck) return false;
   if (item.tagStatus === "done" || item.tagStatus === "manual") return true;
   return item.tagSource !== "ai" && item.tagStatus !== "pending"; // ai-edited while queued or failed
 }

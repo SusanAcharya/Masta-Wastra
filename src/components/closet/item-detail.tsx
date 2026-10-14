@@ -156,6 +156,12 @@ export function ItemDetail({ id, onClose }: { id: string; onClose: () => void })
                 <Icon name="edit" size={18} />
                 {untagged ? copy.item.tagNow : copy.item.edit}
               </button>
+              {item.tagCheck ? (
+                <button type="button" className="btn w-full" onClick={() => updateItem(db, item.id, { tagCheck: false })}>
+                  <Icon name="check" size={18} />
+                  {copy.item.confirm}
+                </button>
+              ) : null}
               {settings?.aiConsent !== false && !recognising ? (
                 <button type="button" className="btn w-full border-transparent" onClick={retag}>
                   <Icon name="spark" size={18} />
