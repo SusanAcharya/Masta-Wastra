@@ -27,7 +27,7 @@ Every [VERIFY] in the build prompt, checked against the primary source. Checked 
 
 - [x] **Gemini free tier limits.** Read by Susan in AI Studio > Rate limit, 2026-10-14, project `gen-lang-client-0711233403` (columns assumed RPM / TPM / RPD as AI Studio orders them): `gemini-3.5-flash-lite` **15 RPM, 250K TPM, 50 RPD**; `gemini-3.1-flash-lite` 15 / 250K / 50; Flash models (3, 3.6, 3.7, 3.8) 5 / 250K / 20. **Different from the prompt's measured 500 RPD.** Defaults changed to `GEMINI_RPM=10`, `GEMINI_RPD=45`. Re-read after moving to the dedicated project.
 - [x] **No billing account linked.** Confirmed 2026-10-14 by Susan's AI Studio screenshot: project `gen-lang-client-0711233403` ("Default Gemini Project") shows Billing Tier "Free tier" with "Set up billing". Follow up: move Masta Wastra to its own project, because that project also holds an older key that shares the per-project quota, and the first key was exposed in a screenshot (delete it).
-- [ ] **Upstash Redis via Vercel Marketplace needs no card** on Hobby. No primary source says either way. If a card is asked for, stop: we fall back to in-memory counters (section 7.3).
+- [x] **Upstash Redis via Vercel Marketplace needs no card.** Seen by Susan 2026-10-14 in the Vercel Marketplace install flow (team `nasus-projects-65c59bfe`): Free plan, 500,000 monthly commands, 1 database per account, primary region `iad1`, eviction off. No payment step up to Confirmation. Database is connected to the Vercel project at deploy (M9).
 - [ ] **Real device timings** (section 6.4): mid Android and iPhone. Filled in at M3.
 
 ## Found along the way
