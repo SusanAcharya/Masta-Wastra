@@ -1,0 +1,11 @@
+/* Contrast fixes on top of the copied Design Lounge themes (WCAG 2.2 AA).
+   Lightness only, chroma and hue kept. Logged in DESIGN.md under Departures.
+   Designed using Design Lounge (https://www.designlounge.live) */
+:root,
+:root[data-theme="light"] {
+  --ink-3: #695b4e; /* was #6f6154: 4.17:1 on --surface-2, now 4.57:1 (1.4.3) */
+  --line-strong: #8e8275; /* was #93877a: 2.86:1 on --bg, now 3.06:1 (1.4.11) */
+}
+:root[data-theme="dark"] {
+  --ink-3: #8f8576; /* was #867d6e: 4.08:1 on --surface-2, now 4.57:1 (1.4.3) */
+}

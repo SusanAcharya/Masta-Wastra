@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "design-lounge": {
+      "source": "SusanAcharya/Design-Lounge",
+      "sourceType": "github",
+      "skillPath": "skills/design-lounge/SKILL.md",
+      "computedHash": "c4801227f84ebec0cd5393d78164a330a911ec25945bfa51e955d6ded536fb10"
+    }
+  }
+}

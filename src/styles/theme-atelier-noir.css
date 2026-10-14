@@ -1,0 +1,65 @@
+/* Atelier Noir · dark · pair: linen-shop
+   Bone type on black. Luxury as the absence of extra lines.
+   Best for: Fashion, Fragrance, Hotels
+   Tags: luxe, dark, fashion */
+/* Colour only. Fonts come from the locked pairing file. Radius and shadow come from the locked family. */
+/* Atelier Noir · full palette · Designed using Design Lounge (https://www.designlounge.live)
+   Primary / secondary / tertiary + feedback + surfaces. Match the numbers.
+   Free to use. */
+/* Copied unchanged from Design Lounge library/themes/atelier-noir.css (numbers untouched;
+   comment dashes swapped for colons). Dark mode, set by the inline theme script on <html data-theme="dark">. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  /* Brand */
+  --primary: #c9a54a;
+  --primary-ink: #141210;
+  --primary-soft: #393019;
+  --secondary: #8a3a3a;
+  --secondary-ink: #fffdf8;
+  --secondary-soft: #2a1616;
+  --tertiary: #62707f;
+  --tertiary-ink: #fffdf8;
+  --tertiary-soft: #232629;
+
+  /* Surface */
+  --bg: #0c0b0a;
+  --surface: #161412;
+  --surface-2: #211e1b;
+  --surface-3: #36322e;
+  --ink: #efe6d6;
+  --ink-2: #b3a894;
+  --ink-3: #867d6e;
+  --line: #2a2622;
+  --line-strong: #756f66;
+
+  /* Feedback : reserved for live state, never decoration */
+  --success: #8fbf7a;
+  --success-ink: #141210;
+  --success-soft: #2b3625;
+  --success-on-soft: #8fbf7a;
+  --warning: #e08a3a;
+  --warning-ink: #141210;
+  --warning-soft: #3f2916;
+  --warning-on-soft: #e08a3a;
+  --danger: #c96958;
+  --danger-ink: #141210;
+  --danger-soft: #381e19;
+  --danger-on-soft: #cf7b6c;
+  --info: #7a8aa0;
+  --info-ink: #141210;
+  --info-soft: #26292e;
+  --info-on-soft: #8a98ab;
+
+  /* Chrome */
+  --focus: #c9a54a;
+  --link: #c9a54a;
+  --overlay: #070605;
+  --inverse: #efe6d6;
+  --inverse-ink: #0c0b0a;
+
+  /* Aliases */
+  --accent: var(--primary);
+  --accent-ink: var(--primary-ink);
+  --positive: var(--success);
+
+}

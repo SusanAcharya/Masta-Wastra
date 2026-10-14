@@ -1,0 +1,138 @@
+/* Adapted from Design Lounge m3-settings-list (Nº 502, Material 3 flat list), restyled onto the
+   locked theme, pairing maison and family editorial (2px radius, no shadows).
+   Designed using Design Lounge (https://www.designlounge.live) */
+
+.section + .section {
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
+}
+
+.header {
+  padding: 16px 0 8px 40px;
+  font-family: var(--font-text);
+  font-style: normal;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  color: var(--primary);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  column-gap: 16px;
+  width: 100%;
+  min-height: 72px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: background-color 150ms linear;
+}
+
+.row:hover {
+  background: var(--surface-2);
+}
+
+.icon {
+  color: var(--ink-2);
+}
+
+.title {
+  display: block;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.support {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+
+.trail {
+  color: var(--ink-2);
+}
+
+.dialog {
+  width: min(312px, calc(100% - 48px));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.dialog::backdrop {
+  background: color-mix(in oklab, var(--overlay) 45%, transparent);
+}
+
+.dialog[open] {
+  animation: dialog-in var(--t-sheet) var(--ease-enter);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scaleY(0.85);
+  }
+}
+
+.dialogTitle {
+  padding: 24px 24px 8px;
+  font-size: 24px;
+}
+
+.dialogBody {
+  padding: 0 24px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+
+.options {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 56px;
+  padding: 0 24px;
+  cursor: pointer;
+}
+
+.opt input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+}

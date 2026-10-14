@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "./theme-linen-shop.css";
+@import "./theme-atelier-noir.css";
+@import "./theme-adjustments.css";
+
+/* Masta Wastra design tokens. Designed using Design Lounge (https://www.designlounge.live)
+   Theme linen-shop (dark pair atelier-noir), pairing maison, family editorial.
+   Tailwind's default palette and radii are removed so only the locked system exists. */
+
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --font-*: initial;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-ink: var(--secondary-ink);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-ink: var(--tertiary-ink);
+  --color-tertiary-soft: var(--tertiary-soft);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-on-soft: var(--success-on-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-on-soft: var(--warning-on-soft);
+  --color-danger: var(--danger);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-on-soft: var(--danger-on-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-on-soft: var(--info-on-soft);
+  --color-focus: var(--focus);
+  --color-link: var(--link);
+  --color-overlay: var(--overlay);
+  --color-inverse: var(--inverse);
+  --color-inverse-ink: var(--inverse-ink);
+  --color-transparent: transparent;
+
+  /* Family editorial: radius 2px, shadow none. */
+  --radius-ui: 2px;
+  --radius-full: 9999px;
+
+  /* Pairing maison. next/font provides the self-hosted faces. */
+  --font-display: var(--font-bodoni), "Bodoni Moda", Georgia, "Times New Roman", serif;
+  --font-text: var(--font-tenor), "Tenor Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Motion tokens, copied from Design Lounge map.json. */
+:root {
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ios-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring-soft: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --ease-spring-snappy: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --t-micro: 120ms;
+  --t-fast: 160ms;
+  --t-ui: 200ms;
+  --t-layout: 320ms;
+  --t-sheet: 400ms;
+  --t-hero: 640ms;
+
+  --radius: 2px;
+  --page-x: 20px; /* phone margin */
+  --control-h: 48px; /* density air, phone */
+  --tabbar-clear: 140px; /* room for the floating tab bar */
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-text);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.55;
+    letter-spacing: 0.04em;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Bodoni Moda only at 24px and above (DESIGN.md). h3 and below stay in Tenor Sans. */
+  h1,
+  h2,
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  h3,
+  h4 {
+    font-family: var(--font-text);
+    font-weight: 400;
+  }
+  code,
+  kbd,
+  samp,
+  .mono {
+    font-family: var(--font-mono);
+  }
+  .num {
+    font-family: var(--font-text);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Links in text are underlined, not colour alone (1.4.1). Buttons and nav opt out. */
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary-soft);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* Label role: 11 to 12px with tracking, never a sentence. */
+  .label {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  /* Family editorial button: outlined, no fill until hover or press.
+     44px minimum on touch (prompt section 12), 48px for the air density on phone. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--control-h);
+    padding: 0 20px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--t-ui) var(--ease-standard),
+      color var(--t-ui) var(--ease-standard),
+      border-color var(--t-ui) var(--ease-standard);
+  }
+  .btn:hover {
+    background: var(--surface-2);
+  }
+  .btn-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .btn-primary:hover,
+  .btn-primary:active {
+    background: var(--primary);
+    color: var(--primary-ink);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .page {
+    padding: max(24px, env(safe-area-inset-top)) var(--page-x) var(--tabbar-clear);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

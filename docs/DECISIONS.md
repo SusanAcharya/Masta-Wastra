@@ -25,3 +25,14 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-14. Service worker via `@serwist/turbopack`**, not `@serwist/next`'s webpack plugin, so builds stay on Turbopack. Installed in M8.
 - **2026-10-14. M8 "Lighthouse PWA" criterion replaced** by a Playwright check (manifest fields, SW registration, offline open) plus a manual Chrome DevTools Application panel check. Lighthouse 12 removed the PWA category.
 - **2026-10-14. Gemini call shape:** `thinkingLevel: MINIMAL`, `mediaResolution: LOW`, `responseJsonSchema` from zod. See VERIFICATIONS rows 7d, 7e, 8.
+
+## M1. Design system and shell
+
+- **2026-10-14. Design Lounge installed per project** with `npx skills add SusanAcharya/Design-Lounge -a claude-code -y` into `.claude/skills/design-lounge` (pinned by `skills-lock.json`).
+- **2026-10-14. Tailwind through `@tailwindcss/postcss`** (supersedes the M0 `@tailwindcss/turbopack` choice). The template's Turbopack rule `"*.css" as "*.css"` also caught `*.module.css` and stripped CSS Modules. The PostCSS plugin is the documented Next setup (VERIFICATIONS row 2b).
+- **2026-10-14. Tailwind's default palette, radii, shadows and fonts are removed** (`--color-*: initial` etc.), so only the locked tokens exist as utilities.
+- **2026-10-14. Theme mode lives in `localStorage` (`mw-theme`)**, read by a tiny inline script in `<head>` before first paint, so there is no flash. Dexie settings (M2) mirror it; localStorage stays the source for first paint.
+- **2026-10-14. Component CSS as CSS Modules** under `src/components/lounge/<piece-id>/`, layout utilities with Tailwind.
+- **2026-10-14. Planned for M7: item detail becomes a full screen layer on `/closet` (`/closet?item=<id>`)**, instead of a `/closet/[id]` route. Items live in IndexedDB, so a dynamic route cannot be precached for offline use, and `shared-element-expand` (`layoutId`) needs grid and detail in one React tree. Revisit if it fights the router.
+- **2026-10-14. Source link** points at `https://github.com/SusanAcharya/masta-wastra` (`SOURCE_URL` in `src/lib/copy.ts`). The repo does not exist yet; create it public before deploy (AGPL).
+- **2026-10-14. `.claude/skills/` is gitignored; `skills-lock.json` is committed.** The repo is public (AGPL) and Design Lounge asks not to republish the catalogue. Restore the skill with `npx skills experimental_install`.
