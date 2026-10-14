@@ -36,3 +36,9 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-14. Planned for M7: item detail becomes a full screen layer on `/closet` (`/closet?item=<id>`)**, instead of a `/closet/[id]` route. Items live in IndexedDB, so a dynamic route cannot be precached for offline use, and `shared-element-expand` (`layoutId`) needs grid and detail in one React tree. Revisit if it fights the router.
 - **2026-10-14. Source link** points at `https://github.com/SusanAcharya/masta-wastra` (`SOURCE_URL` in `src/lib/copy.ts`). The repo does not exist yet; create it public before deploy (AGPL).
 - **2026-10-14. `.claude/skills/` is gitignored; `skills-lock.json` is committed.** The repo is public (AGPL) and Design Lounge asks not to republish the catalogue. Restore the skill with `npx skills experimental_install`.
+
+## From the AI Studio rate limits (applies to M4)
+
+- **2026-10-14. Global Gemini budget is 45 per Pacific day per model** (`GEMINI_RPD=45`, free tier is 50 RPD per project). One 15 item scan uses 15, so the app as a whole onboards about three closets a day before tagging rests. Manual tagging keeps the app fully usable.
+- **2026-10-14. Fallback model `gemini-3.1-flash-lite` (`GEMINI_FALLBACK_MODEL`) takes over when the primary's daily budget is spent.** Its quota is separate (also 50 RPD), so about 90 tags a day in total. Budget counters are kept per model.
+- **2026-10-14. Per install limit lowered to 30 tags per day** (prompt said 120), so one person cannot drain the shared budget. 20 per 10 minutes and 40 per IP per day stay as written.

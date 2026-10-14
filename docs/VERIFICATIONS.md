@@ -20,11 +20,12 @@ Every [VERIFY] in the build prompt, checked against the primary source. Checked 
 | 8 | `responseSchema` | Both exist in 2.29.1; `responseJsonSchema` takes plain JSON Schema | `responseMimeType: 'application/json'` + `responseJsonSchema: z.toJSONSchema(schema)`, then zod parse | M4 |
 | 11 | `@serwist/next` | `withSerwistInit` is webpack only; Next 16 builds with Turbopack | Use `@serwist/turbopack` 9.5.13 (route `app/serwist/[path]/route.ts`), keep Turbopack | M8 |
 | 15 | Lighthouse PWA installable checks | Lighthouse 12 removed the PWA category | M8 accept: Playwright asserts manifest fields + SW registration + offline, plus a manual DevTools Application panel check | M8 |
+| 7c | 15 RPM / 500 RPD (third party) | AI Studio shows 15 RPM / **50 RPD** per project per model | `GEMINI_RPD=45`; per install cap 30/day (was 120); fall back to `gemini-3.1-flash-lite` (own 50 RPD) when the primary's day is spent | M4 |
 | 16 | CSP with nonce | Nonce forces dynamic rendering on every page and is incompatible with PPR | Static CSP in `next.config` headers (`'unsafe-inline'` for Next's inline scripts, `'wasm-unsafe-eval'` for ORT). Decide in M9, log it | M9 |
 
 ## Open items only Susan can confirm
 
-- [ ] **Gemini free tier limits** for `gemini-3.5-flash-lite` in AI Studio > Rate limits for the actual project. Google no longer publishes them. Defaults stay at `GEMINI_RPM=10`, `GEMINI_RPD=400`; lower them if AI Studio shows less.
+- [x] **Gemini free tier limits.** Read by Susan in AI Studio > Rate limit, 2026-10-14, project `gen-lang-client-0711233403` (columns assumed RPM / TPM / RPD as AI Studio orders them): `gemini-3.5-flash-lite` **15 RPM, 250K TPM, 50 RPD**; `gemini-3.1-flash-lite` 15 / 250K / 50; Flash models (3, 3.6, 3.7, 3.8) 5 / 250K / 20. **Different from the prompt's measured 500 RPD.** Defaults changed to `GEMINI_RPM=10`, `GEMINI_RPD=45`. Re-read after moving to the dedicated project.
 - [x] **No billing account linked.** Confirmed 2026-10-14 by Susan's AI Studio screenshot: project `gen-lang-client-0711233403` ("Default Gemini Project") shows Billing Tier "Free tier" with "Set up billing". Follow up: move Masta Wastra to its own project, because that project also holds an older key that shares the per-project quota, and the first key was exposed in a screenshot (delete it).
 - [ ] **Upstash Redis via Vercel Marketplace needs no card** on Hobby. No primary source says either way. If a card is asked for, stop: we fall back to in-memory counters (section 7.3).
 - [ ] **Real device timings** (section 6.4): mid Android and iPhone. Filled in at M3.
