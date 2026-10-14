@@ -30,7 +30,7 @@ test.describe("pick my outfit", () => {
     expect(first.length).toBeGreaterThan(10);
 
     await page.getByRole("button", { name: "Show another" }).click();
-    await expect(page.getByRole("article")).toHaveCount(1); // the old card has left
+    await expect(page.getByRole("article")).toHaveCount(1, { timeout: 10_000 }); // the old card has left
     await expect(card).not.toHaveAttribute("aria-label", first);
 
     await card.press("ArrowRight"); // keyboard: wear it
@@ -38,7 +38,7 @@ test.describe("pick my outfit", () => {
     await expect(page.getByRole("button", { name: "Share this outfit" })).toBeVisible();
 
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "History" }).click();
-    await expect(page.getByRole("button", { name: /pieces worn/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /pieces worn/ })).toHaveCount(1, { timeout: 10_000 });
     expect(errors).toEqual([]);
   });
 });

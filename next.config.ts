@@ -25,7 +25,8 @@ const policy = (evalAllowed: boolean) =>
 // The pages never need eval. The cutout worker does: a library inside the background removal
 // runtime compiles code with `new Function`. A worker follows the CSP of its own script
 // response (and onnxruntime's blob workers inherit it), so only that script gets 'unsafe-eval'.
-const WORKER_CHUNK = "_next/static/chunks/turbopack-worker";
+// Locally the chunk is under /_next/static/chunks/, on Vercel under /_next/static/immutable/chunks/.
+const WORKER_CHUNK = "_next/static/(?:immutable/)?chunks/turbopack-worker";
 
 const shared = [
   // Cross-origin isolation lets onnxruntime use WASM threads: warm cutouts went from about
@@ -50,7 +51,11 @@ const nextConfig: NextConfig = {
         headers: [...shared, { key: "Content-Security-Policy", value: policy(dev) }],
       },
       {
-        source: `/${WORKER_CHUNK}:rest(.*)`,
+        source: "/_next/static/chunks/turbopack-worker:rest(.*)",
+        headers: [...shared, { key: "Content-Security-Policy", value: policy(true) }],
+      },
+      {
+        source: "/_next/static/immutable/chunks/turbopack-worker:rest(.*)",
         headers: [...shared, { key: "Content-Security-Policy", value: policy(true) }],
       },
       {
@@ -62,11 +67,6 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-  async rewrites() {
-    // The worker lives in .next/static (serwist.config.js) but must be served from the root so
-    // its scope is the whole app.
-    return [{ source: "/sw.js", destination: "/_next/static/sw.js" }];
   },
   turbopack: {
     // A stray lockfile in the home folder confuses root detection.
