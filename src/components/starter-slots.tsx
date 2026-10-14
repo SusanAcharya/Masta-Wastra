@@ -24,16 +24,16 @@ export function StarterSlots({ compact = false }: { compact?: boolean }) {
         return (
           <li
             key={slot.key}
-            className={`flex flex-col items-center rounded-ui border ${done ? "border-secondary" : "border-line"} bg-surface ${compact ? "px-2 py-3" : "px-3 py-4"}`}
+            className={`flex flex-col items-center rounded-ui border ${done ? "border-success" : "border-line"} bg-surface ${compact ? "px-2 py-3" : "px-3 py-4"}`}
           >
             <Garment
               kind={slot.kind}
-              fill={done ? "var(--secondary)" : "var(--surface-3)"}
+              fill={done ? "var(--success)" : "var(--surface-3)"}
               size={compact ? 40 : 64}
             />
             <span className="mt-2 text-[14px]">{slot.label}</span>
             <span className="mt-0.5 flex items-center gap-1 text-[12px] text-ink-2">
-              {done ? <Icon name="check" size={14} className="text-secondary" /> : null}
+              {done ? <Icon name="check" size={14} className="text-success" /> : null}
               {done ? copy.closet.count(n) : copy.closet.none}
             </span>
           </li>

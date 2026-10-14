@@ -101,6 +101,20 @@ export const ICONS = {
   "folder": "<path d=\"M3 7h7l2 2h9v10H3z\"/>",
   // lounge
   "file": "<path d=\"M7 3h8l5 5v13H7z\"/><path d=\"M15 3v5h5\"/>",
+  // lounge
+  "map-pin": "<path d=\"M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z\"/><circle cx=\"12\" cy=\"10\" r=\"2.2\"/>",
+  // lounge
+  "compass": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15.5 8.5l-2 6-6 2 2-6z\"/>",
+  // lounge
+  "chevron-up": "<path d=\"M6 15l6-6 6 6\"/>",
+  // lounge
+  "arrow-up": "<path d=\"M12 19V5M6 11l6-6 6 6\"/>",
+  // lounge
+  "list": "<path d=\"M9 7h11M9 12h11M9 17h11M5 7h.01M5 12h.01M5 17h.01\"/>",
+  // lounge
+  "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 20a8 8 0 0116 0\"/>",
+  // lounge
+  "link": "<path d=\"M10 13a4 4 0 006 0l2-2a4 4 0 00-6-6l-1 1\"/><path d=\"M14 11a4 4 0 00-6 0l-2 2a4 4 0 006 6l1-1\"/>",
   // lucide thumbs-up
   "thumbs-up": "<path d=\"M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z\"/> <path d=\"M7 10v12\"/>",
   // lucide thumbs-down

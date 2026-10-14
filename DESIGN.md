@@ -56,7 +56,7 @@ Motion: cubic-bezier(0.2, 0.7, 0.2, 1) · UI 200ms · layout 320ms · sheets 400
 Density: air (page padding 20 on phone, stack gap 24, control 48px on phone)
 Shell: none (phone tab bar), content column 720px
 Panel: none
-Nav: Outfits, Closet, Add, History, Settings
+Nav: Outfit, Closet, Add, History, Settings
 Phone nav: tabs (ios-glass-tab-bar), same labels on every width
 Pieces: see Pieces per screen
 Kept from their system: n/a, new kit
@@ -144,6 +144,14 @@ Global: `useReducedMotion()` plus the in-app override. Under reduced motion: no 
   - **App icon and favicon are the hanger object**, not a letter monogram. One mark everywhere, and it needs no text-to-path step. Master in `design/icons/app-icon.svg` (1024 square, light from the top, mark inside the middle 80%), rendered by `design/icons/render.mjs` and `make-ico.py`. Favicon SVG has a dark variant (gold on noir). Checked at 29px.
   - **Section titles under 24px** use a `.plain` text face class (pairing caution), so the Didone appears once per screen, in the header.
 
+- **2026-10-14. Susan's flow replaces the morning deck.** The home tab is **Outfit**: "What should I wear?", the weather line, an occasion row, one primary **Pick my outfit**, then one card. `card-stacked-deck` keeps its point (drag with a stamp, flick to decide, buttons and arrow keys do the same) but shows one card at a time: right is Wear this, left is Show another. Reduced motion: buttons only, 120ms fades.
+- **2026-10-14. No tag form when adding clothes** (Susan: "it needs to be smooth, just uploads and arranges where it fits"). After the Lift the piece files itself; a `loader-text-shimmer` placeholder shows while Gemini recognises it. The manual tag sheet (`ios-bottom-sheet-detents`, chips, a 5 stop warmth control) is only a one tap fix on the item.
+- **2026-10-14. Weather strip without the hourly scrubber.** `ios-weather-hourly-scrub`'s point is the scrub; the snapshot keeps only the daytime range, so the strip is one line (place, feels like range, rain, wind) plus the Open-Meteo credit. Scrubber dropped, logged here.
+- **2026-10-14. Item detail is a full screen layer on /closet** (`?item=`), so `shared-element-expand` can fly the tile into the stage (`layoutId`). Pieces: `luxe-product-detail` (stage left, name as largest type, facts list), `m3-dialog` for delete (Cancel outline, Delete the one solid button, in `--danger` with words).
+- **2026-10-14. History** uses `phone-calendar-agenda` as a month grid with a cutout thumbnail per worn day, a `widget-activity-rings` single ring for closet use, KPI tiles from `charts-kpi-spark-row` without sparklines (one month of data rarely draws a line), and a colour mix bar in the closet's own colour families. `odometer-counter` and `card-polaroid-frames` not used: the calendar tiles already carry the pictures.
+- **2026-10-14. Share card** is always drawn in the light theme (linen), so a shared picture looks the same for everyone.
+- **2026-10-14. Switch handle off state uses `--ink-2`** on `--surface-2` (4.6:1), not `--line-strong` (under 3:1 for 1.4.11).
+
 ## Sources
 
 - theme linen-shop: https://www.designlounge.live/themes/linen-shop
@@ -157,7 +165,19 @@ Global: `useReducedMotion()` plus the in-app override. Under reduced motion: no 
 - landing-fashion-atelier: layout, https://www.designlounge.live/demo/landing-fashion-atelier, point: kept (Didone name as largest type, drawn garment still, no photos)
 - footer-centered-colophon: component, https://www.designlounge.live/demo/footer-centered-colophon, point: kept (centred italic wordmark, three links, credit)
 - ios-onboarding-carousel: layout, https://www.designlounge.live/demo/ios-onboarding-carousel, point: kept (snapping slides, drawn art cards, stretching dots, Continue becomes the real action on the last slide); art radius 2px from the family, no glow
-- card-stacked-deck: component, https://www.designlounge.live/demo/card-stacked-deck, point: kept for the stack (depth from the bottom centre, deal-in); swipe and undo arrive in M6
+- card-stacked-deck: component, https://www.designlounge.live/demo/card-stacked-deck, point: kept (drag follows the pointer, stamp, flick or distance to decide, buttons and keys); one card at a time
+- scan-page: motion, https://www.designlounge.live/demo/scan-page, point: kept (the beam sweeps over visible content) in the Lift and while a cutout runs
+- gallery-contact-sheet: component, https://www.designlounge.live/demo/gallery-contact-sheet, point: kept (frames of colour fields become the session's cutouts)
+- card-progress-goals + diamond-badge-rail: component, https://www.designlounge.live/demo/card-progress-goals, point: kept as one bar with the next badge at its end; rings and rail dropped for a phone column
+- phone-permission-prompt: layout, https://www.designlounge.live/demo/phone-permission-prompt, point: kept (explain in our own words before any download or system prompt)
+- ios-bottom-sheet-detents: component, https://www.designlounge.live/demo/ios-bottom-sheet-detents, point: kept (grabber, two detents, drag to resize or dismiss)
+- mobile-filter-chips-list: component, https://www.designlounge.live/demo/mobile-filter-chips-list, point: kept (one scrolling chip row, counts in the chips, more in a sheet)
+- masonry-gallery-captions: layout, https://www.designlounge.live/demo/masonry-gallery-captions, point: kept for the CSS columns wall; captions always visible (no hover on phones)
+- luxe-product-detail: layout, https://www.designlounge.live/demo/luxe-product-detail, point: kept (the object on a stage, the name largest, then facts)
+- m3-dialog: component, https://www.designlounge.live/demo/m3-dialog, point: kept (centred confirm, one destructive action)
+- phone-calendar-agenda: layout, https://www.designlounge.live/demo/phone-calendar-agenda, point: kept (month grid, tap a day to see it)
+- pwa-update-toast, pwa-connectivity-banner, pwa-install-sheet: component, https://www.designlounge.live/demo/pwa-install-sheet, point: kept (reload on tap only; offline as a one line state; install asked after the first success, snoozed three weeks)
+- mobile-load-failed: component, https://www.designlounge.live/demo/mobile-load-failed, point: kept for the error screen (one line, one way on)
 
 ## Match (M1)
 
@@ -168,7 +188,7 @@ Control height / radius: 48px / 2px
 Amount face: Tenor Sans, tabular-nums (.num)
 Shell: none (tab bar)
 Panel: none
-Nav: Outfits, Closet, Add, History, Settings
+Nav: Outfit, Closet, Add, History, Settings
 Phone nav: tabs · same labels at every width
 Fails: none
 ```

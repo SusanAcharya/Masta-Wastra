@@ -215,6 +215,70 @@
   }
 }
 
+/* Working beam while a cutout runs: live state, so it may loop (Design Lounge scan-page, Nº 391). */
+.scan-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--tertiary);
+  animation: scan-sweep 1.4s var(--ease-in-out, ease-in-out) infinite alternate;
+}
+
+@keyframes scan-sweep {
+  from {
+    top: 6%;
+  }
+  to {
+    top: 94%;
+  }
+}
+
+/* loader-text-shimmer (Design Lounge): placeholder text while a piece is recognised. */
+.shimmer {
+  background: linear-gradient(90deg, var(--surface-2) 0%, var(--surface-3) 50%, var(--surface-2) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+  }
+}
+
+/* badge-pop (prompt 9.3): scale 0.6 to 1 on a soft spring. Calm: a fade. */
+.badge-pop {
+  animation: badge-pop 420ms var(--ease-spring-soft) both;
+}
+
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-pop {
+    animation: badge-fade 120ms linear both;
+  }
+  @keyframes badge-fade {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

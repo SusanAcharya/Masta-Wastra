@@ -50,6 +50,20 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section id="privacy" className="mt-16 scroll-mt-6 border-t border-line pt-12" aria-labelledby="privacy-title">
+        <h2 id="privacy-title" className="text-[28px]">
+          {copy.about.privacyTitle}
+        </h2>
+        <ul className="mt-5 flex max-w-[62ch] flex-col gap-3 text-[15px] text-ink-2">
+          {copy.about.privacy.map((line) => (
+            <li key={line} className="flex gap-3">
+              <Icon name="lock" size={18} className="mt-1 shrink-0" />
+              {line}
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <Colophon />
     </div>
   );

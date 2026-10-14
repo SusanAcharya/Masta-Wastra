@@ -221,3 +221,23 @@ export const DEFAULT_WEIGHTS: FeatureVector = {
   patternBalance: 1.0,
   vibeCohesion: 1.0,
 };
+
+/* Engine vocabulary (M5). Pure types shared by the engine modules and the screens. */
+
+// Temperature bands on feelsMax, °C (8.1).
+export const BANDS = ["freezing", "cold", "cool", "mild", "warm", "hot"] as const;
+export type Band = (typeof BANDS)[number];
+
+// Outfit templates (8.3). A: top + bottom + shoes. B: dress + shoes. C: A or B + mid layer.
+// D: A, B or C + outer. `base` says whether the outfit is built on A or B ("a dress day").
+export type TemplateId = "A" | "B" | "C" | "D";
+export type OutfitBase = "A" | "B";
+
+// Where an item sits in an outfit. A layer 1 top (sweater) can fill `top` on its own or `mid`
+// over a base top; a layer 1 outer (vest) is a `mid`.
+export type Slot = "outer" | "mid" | "top" | "dress" | "bottom" | "shoes" | "accessory";
+
+// The slots a closet can run short of, for "Add a pair of shoes to unlock more looks" (8.7.7).
+export type LimitingSlot = "top" | "bottom" | "shoes" | "outer" | "mid";
+
+export type Units = "c" | "f";

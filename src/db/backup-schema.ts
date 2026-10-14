@@ -1,4 +1,8 @@
 import { z } from "zod";
+
+// No JIT: zod would probe `Function("")`, which our CSP blocks (no eval on pages) and Chrome
+// reports as a CSP issue. The interpreter is fast enough for these small payloads.
+z.config({ jitless: true });
 import { CATEGORIES, FEATURE_KEYS, OCCASIONS, PATTERNS, SUBTYPE_IDS, VIBES } from "@/engine/types";
 
 // Validation for .wastra.zip imports (13). Strict on shapes the app relies on,

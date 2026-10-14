@@ -58,3 +58,62 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-14. Merge import rules:** items by id, newer `updatedAt` wins; images follow the winning item or fill gaps; an outfit whose signature exists locally keeps the local id and its wears, feedback and deal days are repointed; deal days, wears, feedback and tag jobs are added when absent; local settings win, badges combine. Replace keeps local identity only.
 - **2026-10-14. Import limits:** zip over 1 GB is refused before unzipping; schema newer than the app is refused with "update the app first".
 - **2026-10-14. `fake-indexeddb` loads from `tests/unit/setup.ts`** (Vitest `setupFiles`), because Dexie reads `indexedDB` when first imported. Config renamed to `vitest.config.mts` (Vite native loader warning).
+
+## Product changes from Susan (2026-10-14)
+
+- **No scheduled morning deal.** Replaces 8.7 steps 5 to 8 and the "Three outfits every morning" promise. The home tab is "Outfit": one button, **Pick my outfit**, reads location and today's weather and returns **one** outfit with a reason; **Show another** returns the next best that shares at most one core piece with everything shown and prefers a different colour story; **Wear this** logs it to History. No morning hour, no reshuffle cap. The engine keeps `deal()` but the UI uses `createPicker()` / `pickAnother()`.
+- **Colour matching is the product.** The engine treats a colour clash as disqualifying while any non-clashing outfit exists (floor S_color 0.5), weighs every palette colour by share, penalises near misses, requires shoes and accessories to echo or be neutral, and explains what actually makes the outfit work. Details in docs/ALGORITHM.md.
+- **No forms when adding clothes.** Upload is upload: each photo is cut out, recognised by Gemini (category, kind, colours, warmth, pattern, style) and filed automatically. The manual tag sheet stays only as a one tap fix from the item, never as a step. AI consent (7.5) is folded into the one time setup sheet as a visible sentence instead of a separate blocking sheet; it can be turned off in Settings, and then pieces wait as "Needs a tag" instead of interrupting the scan. Pieces still being recognised are never used in outfits.
+
+## M3. Capture and cutout
+
+- **2026-10-14. COOP `same-origin` + COEP `credentialless` site wide.** ORT WASM threads: warm cutouts 6.7 s to 2.0 s in Chromium (VERIFICATIONS, M3 measurements). Safari ignores `credentialless` and stays single threaded.
+- **2026-10-14. imgly runs only inside a module Web Worker** (`src/workers/cutout.worker.ts`) behind the engine seam `src/workers/engines/` (6.6). Output is PNG from imgly; the worker trims (4% padding), extracts colours and re-encodes WebP (PNG when the browser cannot encode WebP).
+- **2026-10-14. Colour extraction merges clusters of one cloth colour** (OKLab distance under 0.06, or the same colour name), so folds and shadows do not produce "camel and camel".
+- **2026-10-14. No goal picker step.** The scan goal is 10, then 15 once 10 are in (9.6 offered a picker; removed to keep adding clothes frictionless).
+- **2026-10-14. Test photos are synthetic** (`tests/fixtures/make-garments.py`): drawn garments on bedsheet, wood and door textures. No licence-free real photo set was available. Real photos are covered by the device checklist.
+- **2026-10-14. Photos picked before settings load are queued, never dropped**, and `useSettings()` creates the settings row outside Dexie live queries (live queries are read only, so a first-run write inside one failed silently).
+
+## M4. Tagging (server and queue, built by a helper agent)
+
+- **2026-10-14. No `runtime` export in route handlers.** With `cacheComponents`, Next 16.4 rejects any route segment `runtime` ("not compatible with nextConfig.cacheComponents"), including `'nodejs'`. Node is the default. `maxDuration = 20` stays. Prompt 17 step 4 is superseded.
+- **2026-10-14. Origin rule:** exact match in `ALLOWED_ORIGINS`, or the request's own host (covers previews and localhost). Missing or `null` Origin is refused.
+- **2026-10-14. Order of checks in `/api/tag`:** method, Origin, configured, Content-Type, token, body size, JSON/zod, per install, per IP, global per model budget, image sniff. Every window counts in one Redis pipeline (1 to 2 HTTP calls per tag).
+- **2026-10-14. Day windows follow the Pacific calendar day.** Per install 10 min gives `rate_limited`; per install and per IP days give `daily_budget`; both models spent gives `global_budget` with Retry-After to Pacific midnight + 5 min.
+- **2026-10-14. Google 429:** a per day quota marks that model spent until midnight and tries the fallback; otherwise treated as a busy minute. Other Gemini errors or invalid JSON give 502 `upstream`. 8 s timeout per Gemini call.
+- **2026-10-14. Redis:** `SET key 0 PX ttl NX` then `INCR` (works on every Redis). Store errors fall back to in-memory counters (fail open, logged).
+- **2026-10-14. Tokens:** HMAC over the base64url payload, compared as text in constant time; `iat` more than 5 min in the future is refused; a re-issue with a valid old token keeps the same install id.
+- **2026-10-14. Gemini mapping:** user turn "Tag this item."; subtype wins over a contradicting category; each measured colour takes the nearest unused Gemini name within OKLab 0.16, else `nearestColorName`.
+- **2026-10-14. Queue:** backoff 10, 20, 40, 80, 160 s then dead at 6 attempts (no jitter on Retry-After); `not_configured` and `origin` pause like a budget instead of killing jobs; 401 re-issues the token once; user edits always win (an AI answer for an edited item is discarded); one run at a time per tab and across tabs (`navigator.locks`), jobs leased for 2 min.
+
+## M5. Outfit engine (built by a helper agent; full text in docs/ALGORITHM.md)
+
+- **2026-10-14. Layer prohibitions are hard, requirements soft** (via `layerFit`), so a closet without a coat still gets an outfit on a cold day. A sweater worn alone counts as base + mid.
+- **2026-10-14. Harmony precedence:** echo (same colour) 0.9, near miss 0.4, neutral pairs 0.75 (0.8 with lightness contrast), neutral + colour 0.9, tonal (hues within 15°, ΔL ≥ 0.25) 0.85, then the hue table.
+- **2026-10-14. Neutral names always win:** black, white, grey, charcoal, cream, navy, beige, camel, khaki, denim, olive, brown.
+- **2026-10-14. Occasion table filled in** for casual, date, travel and festival (ALGORITHM.md).
+- **2026-10-14. Accessories:** at most one, only when it raises the score; bag and belt always allowed, scarf and gloves in the cold, hat or cap in hot UV.
+- **2026-10-14. rainFit is graded** (waterproof outer 0.5, shoes 0.5 / 0.3 / 0); wind penalises skirts and dresses additively.
+- **2026-10-14. Repeats compare core pieces only**; "yesterday" means a wear dated today or yesterday.
+- **2026-10-14. Disliked items** (affinity at or below -0.75, about ten thumbs down) are held back while any alternative exists.
+- **2026-10-14. Weather "Rain after 3" timing is not available** (the snapshot has no hourly series); the reason says "Rain on the way."
+- **2026-10-14. 300 item closet deals in about 14 ms in Node** (test asserts the median of 5 runs under 50 ms).
+
+## M6 to M9 (one pass, after Susan's product changes)
+
+- **2026-10-15. One card, on demand.** `createPicker` ranks once per occasion, weather and closet; each tap gets a fresh seed. Every shown outfit is saved (`saveOutfit`) and today's shown list is kept in `dealDays` so History and learning have the context. "Show another" counts as a skip (-0.2), Wear as +1.0, thumbs as +0.7 / -0.8, all centred on the session's mean features.
+- **2026-10-15. Pieces still being recognised never join outfits** (`isDressable`): only AI done, manual, or user-edited pieces. Pick shows how many are waiting.
+- **2026-10-15. Weather cache in localStorage** (one snapshot per place and hour, reused offline for 24 h, labelled "From earlier"), plus the service worker's StaleWhileRevalidate on Open-Meteo. Location: "Use my location" (asked only on tap, rounded to 2 decimals), city search, or a quick manual pick.
+- **2026-10-15. Closet filters are one pure query builder** (`lib/closet-filter.ts`): OR within a group, AND across groups; colour families are the badge families.
+- **2026-10-15. Never worn boost** is a History action that sets `settings.neverWornBoostUntil` to 7 days ahead; the engine triples the never worn weight while it lasts.
+- **2026-10-15. Service worker in Serwist configurator mode** (`@serwist/next/config` + `@serwist/cli`, `next build && serwist build`), not `@serwist/turbopack`: its route handler exports route segment config (`dynamic`, `revalidate`) that Cache Components rejects. Configurator mode also precaches every prerendered route. `skipWaiting` is off: the update toast reloads only on tap, never mid-scan.
+- **2026-10-15. Static CSP in `next.config.ts`** with `'unsafe-inline'` scripts (Next bootstrap and the theme script) and `'wasm-unsafe-eval'`; `https://staticimgly.com` and `blob:` allowed for the cutout runtime. A nonce would make every page dynamic and is incompatible with partial prerendering.
+- **2026-10-15. The install sheet waits for the first worn outfit**, never the first load; "Not now" snoozes it for 21 days (localStorage). iOS gets the three Share steps instead of a button.
+- **2026-10-15. AI consent:** the one time setup sheet states what goes to Gemini; continuing either way turns recognition on (`aiConsent: true`), Settings turns it off. Prompt 7.5 asked for a separate sheet; folded in per Susan's "no friction" instruction and disclosed in About > Privacy and docs/PRIVACY.md.
+- **2026-10-15. The service worker never answers Web Worker script requests.** Turbopack passes a worker its bootstrap config in the URL fragment; a worker served by a service worker sees the response URL (no fragment) and fails with "Missing worker bootstrap config". A fetch listener before Serwist's stops propagation for `destination` worker / sharedworker. Offline, the immutable chunk comes from the HTTP cache.
+- **2026-10-15. CSP split by path:** pages get no `'unsafe-eval'`; only `/_next/static/chunks/turbopack-worker*` (the cutout worker's script) does, because a library inside the background removal runtime compiles code with `new Function`. A worker follows its own script's CSP and ORT's blob workers inherit it.
+- **2026-10-15. No duplicate precache entries:** `/offline` is prerendered, so it is not added again (a duplicate URL with another revision made the service worker install fail).
+- **2026-10-15. First install never reloads the page;** the update toast's Reload is the only thing that does (`controllerchange` also fires on first install via `clientsClaim`).
+- **2026-10-15. Storage persistence is requested silently** after the third piece (no sheet mid batch, per Susan). Chrome and Edge decide without a prompt; Firefox shows its own; installed Safari apps get it.
+- **2026-10-15. WebGPU only with a real adapter** (`navigator.gpu.requestAdapter()` resolves non-null), else WASM threads.
+- **2026-10-15. `serwist.config.js` stays `.js`** (the CLI only looks for that name); Node prints a module type warning during build, harmless.

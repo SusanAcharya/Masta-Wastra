@@ -1,0 +1,125 @@
+/* Adapted from Design Lounge ios-bottom-sheet-detents (Nº 004) and m3-modal-bottom-sheet:
+   a modal sheet with a grabber that rests at two detents, 40% and 90% (prompt 9.3).
+   Native <dialog>: focus is trapped while open and restored on close.
+   Designed using Design Lounge (https://www.designlounge.live) */
+
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 560px;
+  max-height: none;
+  margin: 0 auto;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition: height var(--t-sheet) var(--ease-ios-sheet);
+}
+
+.sheet:not([open]) {
+  display: none;
+}
+
+.sheet[data-detent="half"] {
+  height: min(70dvh, max(40dvh, 420px));
+}
+
+.sheet[data-detent="full"] {
+  height: 90dvh;
+}
+
+.sheet[data-detent="auto"] {
+  height: auto;
+  max-height: 90dvh;
+}
+
+.sheet[open] {
+  animation: rise var(--t-sheet) var(--ease-ios-sheet);
+}
+
+.sheet::backdrop {
+  background: color-mix(in oklab, var(--overlay) 42%, transparent);
+  animation: fade var(--t-sheet) var(--ease-standard);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.grab {
+  display: grid;
+  place-items: center;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  flex: none;
+}
+
+.grab span {
+  width: 36px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--line-strong);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px 12px;
+  flex: none;
+}
+
+.title {
+  font-family: var(--font-text);
+  font-style: normal;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px max(24px, env(safe-area-inset-bottom));
+  overscroll-behavior: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet[open],
+  .sheet::backdrop {
+    animation: fade 120ms linear;
+  }
+  .sheet {
+    transition: none;
+  }
+}

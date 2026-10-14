@@ -1,0 +1,104 @@
+/* The Lift (prompt 9.4): a linen scan beam sweeps down, the background dissolves behind it,
+   the garment peels off the page. Beam from Design Lounge scan-page (Nº 391).
+   Designed using Design Lounge (https://www.designlounge.live) */
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.photo,
+.cut {
+  position: absolute;
+  inset: 8%;
+  width: 84%;
+  height: 84%;
+  object-fit: contain;
+}
+
+.photo {
+  animation: wipe-out 700ms var(--ease-standard) forwards;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0 45%, #000 55% 100%);
+  mask-image: linear-gradient(to bottom, transparent 0 45%, #000 55% 100%);
+  -webkit-mask-size: 100% 220%;
+  mask-size: 100% 220%;
+}
+
+.cut {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 45%, transparent 55% 100%);
+  mask-image: linear-gradient(to bottom, #000 0 45%, transparent 55% 100%);
+  -webkit-mask-size: 100% 220%;
+  mask-size: 100% 220%;
+  animation: wipe-in 700ms var(--ease-standard) forwards;
+}
+
+@keyframes wipe-out {
+  from {
+    -webkit-mask-position: 0 100%;
+    mask-position: 0 100%;
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+
+@keyframes wipe-in {
+  from {
+    -webkit-mask-position: 0 100%;
+    mask-position: 0 100%;
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+
+.beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--tertiary);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--tertiary) 30%, transparent);
+  animation: sweep 700ms var(--ease-standard) forwards;
+}
+
+@keyframes sweep {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Calm: a 200ms crossfade from photo to cutout, nothing moves. */
+.calm .photo {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: fade-out 200ms linear forwards;
+}
+.calm .cut {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: fade-in 200ms linear both;
+}
+.calm .beam {
+  display: none;
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}

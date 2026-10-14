@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Tenor_Sans } from "next/font/google";
+import { ConnectivityBanner } from "@/components/pwa/connectivity";
+import { InstallSheet } from "@/components/pwa/install-sheet";
+import { ServiceWorker } from "@/components/pwa/sw-register";
+import { TagRunner } from "@/components/tag-runner";
 import { ThemeWatcher } from "@/components/theme-watcher";
 import { copy } from "@/lib/copy";
 import { THEME_COLOR, themeScript } from "@/lib/theme";
@@ -48,6 +52,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <ThemeWatcher />
+        <TagRunner />
+        <ServiceWorker />
+        <ConnectivityBanner />
+        <InstallSheet />
       </body>
     </html>
   );

@@ -66,3 +66,16 @@ Every [VERIFY] in the build prompt, checked against the primary source. Checked 
 | 16 | Next 16 CSP nonce via proxy.ts | https://nextjs.org/docs/app/guides/content-security-policy ; https://nextjs.org/docs/app/api-reference/file-conventions/proxy | 2026-10-14 | **Confirmed**: v16.0.0 "Middleware is deprecated and renamed to Proxy. Proxy defaults to the Node.js runtime". Use `proxy.ts` and `export function proxy(request: NextRequest)`; setting `runtime` in proxy throws. Codemod: `npx @next/codemod@canary middleware-to-proxy .`. CSP guide: generate the nonce in proxy, set the `Content-Security-Policy` request and response headers plus `x-nonce`, and read it with `(await headers()).get('x-nonce')`. Nonces "must use dynamic rendering" (`await connection()`), which disables static optimization/ISR, and "PPR is incompatible". Alternatives: static CSP in `next.config` `headers()` with `'unsafe-inline'`, or experimental SRI (`experimental.sri.algorithm`). Docs note WebAssembly needs `'wasm-unsafe-eval'`. | Use `proxy.ts`. Add `'wasm-unsafe-eval'` to `script-src` for onnxruntime-web. Decide nonce (all pages dynamic) vs SRI/static CSP. |
 | 17 | Vercel Web Analytics on Hobby | https://vercel.com/docs/analytics/limits-and-pricing | 2026-10-14 | **Confirmed**: "Web Analytics are free for Hobby users within the usage limits". Limits: 50,000 events/month, 1-month reporting window, **no custom events on Hobby**. Over the limit, collection pauses after a 3-day grace period and resumes after 7 days. | Page views only. No custom events. |
 | 18 | Permissive background-removal model for transformers.js | Hugging Face API `https://huggingface.co/api/models/<id>`; `npm view @huggingface/transformers` | 2026-10-14 | **Confirmed**: `onnx-community/BiRefNet_lite-ONNX`: **MIT**, image-segmentation, transformers.js tag; `model_fp16.onnx` 114.5 MB (fp32 224 MB). Also `onnx-community/BEN2-ONNX` (MIT, fp16 219 MB) and `Xenova/modnet` (Apache-2.0, 6.6–25.9 MB, but portrait/human matting). Not permissive: `briaai/RMBG-1.4` / `RMBG-2.0` are "other" (non-commercial), and `onnx-community/ISNet-ONNX` is AGPL-3.0. @huggingface/transformers latest is 4.3.1 (Apache-2.0). | Candidate: BiRefNet_lite (MIT) if an AGPL-free path is needed. Note it is larger than isnet_quint8 (44 MB). |
+
+## M3 measurements (2026-10-14)
+
+Headless Chromium 1248 (Playwright) on an Apple Silicon Mac, `isnet_quint8`, CPU/WASM (no WebGPU in headless), synthetic 1200 x 1600 fixtures resized to 768 x 1024:
+
+| Setup | Warm cutout (worker) | Notes |
+|---|---|---|
+| No cross-origin isolation (single thread) | 6.5 to 7.7 s | ORT warns "multi-threading is not supported", falls back to 1 thread |
+| COOP `same-origin` + COEP `credentialless` (10 threads) | 2.0 to 2.1 s (first after load 4.2 s) | adopted site wide |
+| First ever cutout incl. download | about 170 s on this connection | 44.3 MB model + 11.8 MB wasm + 25 KB mjs, matches resources.json |
+
+- `@imgly/background-removal` 1.7.0 works under Next 16.4 with Turbopack when imported only inside a module Web Worker (`new Worker(new URL(...), { type: "module" })`), despite the README's "only NextJS 15" note.
+- Real phones (mid Android, iPhone) still to be measured: see docs/DEVICE-CHECKS.md.

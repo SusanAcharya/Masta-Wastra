@@ -24,11 +24,11 @@ for (const scheme of ["light", "dark"] as const) {
 test("tab bar labels are visible and the current tab is marked", async ({ page }) => {
   await page.goto("/closet");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of ["Outfits", "Closet", "Add", "History", "Settings"]) {
+  for (const label of ["Outfit", "Closet", "Add", "History", "Settings"]) {
     await expect(nav.getByRole("link", { name: label })).toBeVisible();
   }
   await expect(nav.getByRole("link", { name: "Closet" })).toHaveAttribute("aria-current", "page");
-  const box = await nav.getByRole("link", { name: "Outfits" }).boundingBox();
+  const box = await nav.getByRole("link", { name: "Outfit" }).boundingBox();
   expect(box!.width).toBeGreaterThanOrEqual(44);
   expect(box!.height).toBeGreaterThanOrEqual(44);
 });
@@ -64,10 +64,10 @@ test("a new visitor sees the welcome first, then lands on Add a piece", async ({
   // Seen once: the next visit to / goes straight to today's outfits.
   await page.goto("/");
   await expect(page).toHaveURL(/\/today$/);
-  await expect(page.getByRole("heading", { name: "Today's outfits" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "What should I wear?" })).toBeVisible();
 });
 
-test("today explains what is coming and what is still needed", async ({ page }) => {
+test("the outfit tab explains what is coming and what is still needed", async ({ page }) => {
   await page.goto("/today");
   await expect(page.getByRole("img", { name: /Example/ })).toBeVisible();
   await expect(page.getByText("Still needed")).toBeVisible();

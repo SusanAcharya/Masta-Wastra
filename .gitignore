@@ -49,3 +49,7 @@ next-env.d.ts
 
 # Design Lounge skill library (restore with: npx skills experimental_install). Not republished.
 /.claude/skills/
+
+# Serwist (built by `serwist build`)
+/public/sw*
+/public/swe-worker*
