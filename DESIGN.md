@@ -15,7 +15,7 @@ Ambition: finished, because the build prompt says "Design Lounge, ambitiously" f
 Mode: Kit
 Named aesthetic: none
 Stack: Next.js 16 App Router, React 19, Tailwind 4, Motion, Dexie, Serwist (build prompt section 3)
-Missing: the public repo URL (assumed `github.com/SusanAcharya/Masta-Wastra`), app icon art, fixture garment photos.
+Missing: app icon art, fixture garment photos. Source: https://github.com/SusanAcharya/Masta-Wastra
 
 Hard limits:
 - No stock photos. Garments are the user's own cutouts; anything else is drawn in CSS or SVG.
@@ -169,5 +169,5 @@ Fails: none
 Looked at: today, closet, history, settings, scan, about in phone (390x844) and web (1280x800), light and dark, 24 PNGs, with Playwright Chromium. Large text not looked yet (M6, phone-large-text-layout)
 Remember after five seconds: "a Didone 'No looks yet' on washed linen above a glass tab bar" · could be anyone's: no
 Correction: too much chrome. The About kicker repeated "Wastra" above "Masta Wastra" and again on the garment. Removed the kicker.
-Still open: real public repo URL, app icons and splash (M8), the 200% text check, every piece marked M2 to M9 above
+Still open: app icons and splash (M8), the 200% text check, every piece marked M2 to M9 above
 ```
