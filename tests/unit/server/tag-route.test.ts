@@ -317,7 +317,7 @@ describe("route module", () => {
   it("exports only POST and maxDuration (runtime is rejected with cacheComponents)", async () => {
     const mod = await import("@/app/api/tag/route");
     expect(Object.keys(mod).sort()).toEqual(["POST", "maxDuration"]);
-    expect(mod.maxDuration).toBe(20);
+    expect(mod.maxDuration).toBe(30);
   });
 
   it("answers 503 not_configured from the real env when nothing is set", async () => {
@@ -330,5 +330,12 @@ describe("route module", () => {
     expect(res.status).toBe(503);
     expect(await res.json()).toEqual({ code: "not_configured" });
     vi.unstubAllEnvs();
+  });
+});
+
+describe("Gemini call deadline", () => {
+  it("is at least Google's 10 s minimum (8 s made every real call fail with 400 INVALID_ARGUMENT)", async () => {
+    const { CALL_TIMEOUT_MS } = await import("@/lib/server/gemini");
+    expect(CALL_TIMEOUT_MS).toBeGreaterThanOrEqual(10_000);
   });
 });

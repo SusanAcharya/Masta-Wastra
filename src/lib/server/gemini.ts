@@ -18,8 +18,9 @@ export const SYSTEM_INSTRUCTION =
 // carries the vocabularies.
 export const PROMPT_TEXT = "Tag this item.";
 
-// Leaves room for one fallback attempt inside the route's maxDuration of 20 s.
-const CALL_TIMEOUT_MS = 8000;
+// Gemini refuses a deadline under 10 s ("Minimum allowed deadline is 10s", seen 2026-10-15;
+// 8 s made every call fail). Two attempts (primary, then fallback) fit in maxDuration 30.
+export const CALL_TIMEOUT_MS = 10_000;
 
 /** The slice of @google/genai we use, so tests can inject a fake instead of the network. */
 export interface GeminiClient {

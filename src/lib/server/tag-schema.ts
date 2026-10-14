@@ -82,18 +82,19 @@ const round = (n: number) => Math.round(n * 1000) / 1000;
 /**
  * Gemini output to Item fields. The subtype is the most specific answer, so its category
  * wins over a contradicting category (a "jacket" filed under "top" becomes "outer"), and
- * the layer falls back to the subtype's default when the category had to be corrected.
+ * the layer always comes from the subtype table.
  */
 export function toItemTags(raw: GeminiTag, measured: MeasuredColor[]): Tags {
   const known = SUBTYPES[raw.subtype];
-  const consistent = known.category === raw.category;
   const name = raw.name.trim().replace(/\s+/g, " ");
   return {
     isClothing: raw.isClothing,
     name: name.charAt(0).toUpperCase() + name.slice(1),
     category: known.category,
     subtype: raw.subtype,
-    layer: (consistent ? raw.layer : known.layer) as Layer,
+    // Always the subtype's layer: Gemini called a t-shirt a mid layer (seen 2026-10-15), and the
+    // engine's layering rules depend on this being right.
+    layer: known.layer as Layer,
     colors: mergeColors(measured, raw.colorNames),
     pattern: raw.pattern,
     warmth: raw.warmth as Warmth,
