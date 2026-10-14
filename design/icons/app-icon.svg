@@ -1,0 +1,23 @@
+<!-- Masta Wastra app icon master, 1024 x 1024, square, no transparency (the OS rounds it).
+     One object: the hanger mark from Lounge Icons grammar, in --primary-ink on linen-shop --primary.
+     Light from the top: paler top, darker bottom edge, thin rim, soft shadow under the mark.
+     Designed using Design Lounge (https://www.designlounge.live) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ad5a39"/>
+      <stop offset="0.55" stop-color="#9d4b2c"/>
+      <stop offset="1" stop-color="#8a4126"/>
+    </linearGradient>
+    <filter id="lift" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#2a211b" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#plate)"/>
+  <rect x="3" y="3" width="1018" height="1018" fill="none" stroke="#fffdf8" stroke-opacity="0.18" stroke-width="6"/>
+  <g filter="url(#lift)" transform="translate(512 530) scale(34) translate(-12 -11)"
+     fill="none" stroke="#fffdf8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 6a2 2 0 1 1 2 2v1.2"/>
+    <path d="M12 9.2 3.6 15.8A1.2 1.2 0 0 0 4.3 18h15.4a1.2 1.2 0 0 0 .7-2.2L12 9.2"/>
+  </g>
+</svg>

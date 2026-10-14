@@ -28,6 +28,7 @@ export interface Settings {
   installToken?: string; // from /api/install, never exported
   badges: string[];
   onboardedAt?: string;
+  introSeenAt?: string; // the welcome carousel was seen or skipped
   scanGoal: 10 | 15;
   cardLayout: "flat" | "stacked"; // 10.1
   cutoutModel: "isnet_quint8" | "isnet_fp16"; // 6.1

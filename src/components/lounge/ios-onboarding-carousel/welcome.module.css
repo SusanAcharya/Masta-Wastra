@@ -1,0 +1,223 @@
+/* Adapted from Design Lounge ios-onboarding-carousel (Nº 044): three snapping slides with a
+   drawn art card, a Didone headline, one paragraph, stretching dots and one action.
+   Restyled onto linen-shop / atelier-noir, maison, editorial (2px radius, no glow).
+   Designed using Design Lounge (https://www.designlounge.live) */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 24px 0 28px;
+}
+
+.mark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.skip {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.skip[hidden] {
+  display: none;
+}
+
+.track {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  padding: 8px 28px 0;
+}
+
+.art {
+  position: relative;
+  height: 360px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.title {
+  margin-top: 32px;
+  font-size: 36px;
+  line-height: 1.05;
+}
+
+.body {
+  margin-top: 14px;
+  max-width: 320px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.footer {
+  padding: 16px 24px max(32px, calc(env(safe-area-inset-bottom) + 16px));
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dots i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--line-strong);
+  transition:
+    width 320ms var(--ease-ios-sheet),
+    background-color 320ms var(--ease-standard);
+}
+
+.dots i[data-on] {
+  width: 24px;
+  background: var(--primary);
+}
+
+.cta {
+  width: 100%;
+  min-height: 56px;
+  font-size: 16px;
+}
+
+/* Slide 1: a viewfinder frame around a garment. */
+.frame {
+  position: relative;
+  width: 64%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-color: var(--ink-2);
+  border-style: solid;
+  border-width: 0;
+}
+.corner:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.corner:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.corner:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.corner:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* Slide 2: the left half still has its room behind it; the beam has cleaned the right half. */
+.split {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.room {
+  position: absolute;
+  inset: 0 50% 0 0;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--surface-2) 0 10px,
+    var(--surface-3) 10px 20px
+  );
+}
+
+.beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--primary);
+}
+
+.lifted {
+  position: relative;
+  width: 58%;
+  filter: drop-shadow(0 10px 12px color-mix(in oklab, var(--ink) 22%, transparent));
+}
+
+.deckWrap {
+  width: 78%;
+}
+
+@media (max-height: 760px) {
+  .art {
+    height: 290px;
+  }
+  .title {
+    margin-top: 24px;
+    font-size: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots i {
+    transition-duration: 1ms;
+  }
+  .track {
+    scroll-behavior: auto;
+  }
+}

@@ -56,7 +56,7 @@ Motion: cubic-bezier(0.2, 0.7, 0.2, 1) · UI 200ms · layout 320ms · sheets 400
 Density: air (page padding 20 on phone, stack gap 24, control 48px on phone)
 Shell: none (phone tab bar), content column 720px
 Panel: none
-Nav: Today, Closet, Scan, History, Settings
+Nav: Outfits, Closet, Add, History, Settings
 Phone nav: tabs (ios-glass-tab-bar), same labels on every width
 Pieces: see Pieces per screen
 Kept from their system: n/a, new kit
@@ -136,6 +136,14 @@ Global: `useReducedMotion()` plus the in-app override. Under reduced motion: no 
 - **2026-10-14. The Lift adds a shadow on an editorial (shadow none) family.** Prompt 9.4 asks the garment to "gain the family's shadow"; editorial has none, so the cutout gets a soft CSS `drop-shadow` only during and after the Lift, as an object shadow, never on cards. Logged now, built in M3.
 - **2026-10-14. Root `/` redirects to `/today`** until M2 can read the closet; then it sends an empty closet to `/scan` (prompt 4).
 
+- **2026-10-14. Clarity pass after Susan's review** ("clunky, on your face, I don't know what's going on, no icon, what does Today mean"). Their words win:
+  - **Tabs renamed:** Today to **Outfits** (icon `layers`, a stacked deck), Scan to **Add** (icon `plus`). Routes stay `/today` and `/scan`.
+  - **First open explains the app:** `/welcome`, three slides from `ios-onboarding-carousel` (Snap it once, Cut out on your phone, Three outfits every morning), then Add a piece. Seen once (`settings.introSeenAt`); `/` then goes to Outfits.
+  - **No empty voids:** every tab has a header (small label, Didone title) and shows what will be there: an Example deck on Outfits, live Tops / Bottoms / Shoes slots on Closet and Outfits, this week's dates on History. Drawn data is labelled "Example". The example caption names no colours, because the drawing's colours change with the theme.
+  - **The one primary button per view is filled** (`--primary`, `--primary-ink`), not outlined. Editorial's outline fills only on hover, and a phone has no hover, so it read as a secondary button. Other buttons stay outlined.
+  - **App icon and favicon are the hanger object**, not a letter monogram. One mark everywhere, and it needs no text-to-path step. Master in `design/icons/app-icon.svg` (1024 square, light from the top, mark inside the middle 80%), rendered by `design/icons/render.mjs` and `make-ico.py`. Favicon SVG has a dark variant (gold on noir). Checked at 29px.
+  - **Section titles under 24px** use a `.plain` text face class (pairing caution), so the Didone appears once per screen, in the header.
+
 ## Sources
 
 - theme linen-shop: https://www.designlounge.live/themes/linen-shop
@@ -148,6 +156,8 @@ Global: `useReducedMotion()` plus the in-app override. Under reduced motion: no 
 - m3-settings-list: component, https://www.designlounge.live/demo/m3-settings-list, point: kept (flat list, primary section headers, single choice dialog that really re-themes)
 - landing-fashion-atelier: layout, https://www.designlounge.live/demo/landing-fashion-atelier, point: kept (Didone name as largest type, drawn garment still, no photos)
 - footer-centered-colophon: component, https://www.designlounge.live/demo/footer-centered-colophon, point: kept (centred italic wordmark, three links, credit)
+- ios-onboarding-carousel: layout, https://www.designlounge.live/demo/ios-onboarding-carousel, point: kept (snapping slides, drawn art cards, stretching dots, Continue becomes the real action on the last slide); art radius 2px from the family, no glow
+- card-stacked-deck: component, https://www.designlounge.live/demo/card-stacked-deck, point: kept for the stack (depth from the bottom centre, deal-in); swipe and undo arrive in M6
 
 ## Match (M1)
 
@@ -158,7 +168,7 @@ Control height / radius: 48px / 2px
 Amount face: Tenor Sans, tabular-nums (.num)
 Shell: none (tab bar)
 Panel: none
-Nav: Today, Closet, Scan, History, Settings
+Nav: Outfits, Closet, Add, History, Settings
 Phone nav: tabs · same labels at every width
 Fails: none
 ```

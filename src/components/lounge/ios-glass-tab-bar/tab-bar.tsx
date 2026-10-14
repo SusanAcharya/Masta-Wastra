@@ -8,9 +8,9 @@ import { copy } from "@/lib/copy";
 import s from "./tab-bar.module.css";
 
 const TABS: { href: string; label: string; icon: IconName }[] = [
-  { href: "/today", label: copy.tabs.today, icon: "sun" },
+  { href: "/today", label: copy.tabs.today, icon: "layers" },
   { href: "/closet", label: copy.tabs.closet, icon: "hanger" },
-  { href: "/scan", label: copy.tabs.scan, icon: "camera" },
+  { href: "/scan", label: copy.tabs.scan, icon: "plus" },
   { href: "/history", label: copy.tabs.history, icon: "calendar" },
   { href: "/settings", label: copy.tabs.settings, icon: "sliders" },
 ];

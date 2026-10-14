@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .plate { fill: #9d4b2c }
+    .mark { stroke: #fffdf8 }
+    @media (prefers-color-scheme: dark) {
+      .plate { fill: #161412 }
+      .mark { stroke: #c9a54a }
+    }
+  </style>
+  <rect class="plate" width="32" height="32" rx="6"/>
+  <g class="mark" transform="translate(16 16.6) scale(1.2) translate(-12 -11)" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 6a2 2 0 1 1 2 2v1.2"/>
+    <path d="M12 9.2 3.6 15.8A1.2 1.2 0 0 0 4.3 18h15.4a1.2 1.2 0 0 0 .7-2.2L12 9.2"/>
+  </g>
+</svg>

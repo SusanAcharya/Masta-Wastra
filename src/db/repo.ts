@@ -293,3 +293,19 @@ export async function clearAllData(db: MastaDB) {
     await Promise.all(db.tables.map((t) => t.clear()));
   });
 }
+
+/* Starter slots */
+
+export interface SlotCounts {
+  top: number;
+  bottom: number;
+  shoes: number;
+}
+
+// What a first outfit needs (8.3 template A or B): a top and a bottom, or a dress, plus shoes.
+// A dress fills both the top and the bottom slot.
+export async function slotCounts(db: MastaDB): Promise<SlotCounts> {
+  const items = await listItems(db);
+  const n = (c: Item["category"]) => items.filter((i) => i.category === c).length;
+  return { top: n("top") + n("dress"), bottom: n("bottom") + n("dress"), shoes: n("shoes") };
+}

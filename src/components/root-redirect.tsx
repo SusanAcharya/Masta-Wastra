@@ -2,16 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { countActiveItems } from "@/db/repo";
+import { countActiveItems, getSettings } from "@/db/repo";
 import { getDb } from "@/db/schema";
 
-// Prompt 4: an empty closet starts the scan, otherwise Today.
+// First visit: the welcome carousel explains the app. After that: today's outfits.
 export function RootRedirect() {
   const router = useRouter();
   useEffect(() => {
-    countActiveItems(getDb())
-      .then((n) => router.replace(n > 0 ? "/today" : "/scan"))
-      .catch(() => router.replace("/today"));
+    const db = getDb();
+    Promise.all([countActiveItems(db), getSettings(db)])
+      .then(([n, s]) => router.replace(n > 0 || s.introSeenAt ? "/today" : "/welcome"))
+      .catch(() => router.replace("/welcome"));
   }, [router]);
   return null;
 }

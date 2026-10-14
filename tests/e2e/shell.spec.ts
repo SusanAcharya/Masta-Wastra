@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const SCREENS = ["/today", "/closet", "/history", "/settings", "/scan", "/about", "/offline"];
+const SCREENS = ["/welcome", "/today", "/closet", "/history", "/settings", "/scan", "/about", "/offline"];
 
 for (const scheme of ["light", "dark"] as const) {
   test.describe(`${scheme} theme`, () => {
@@ -11,6 +11,8 @@ for (const scheme of ["light", "dark"] as const) {
       test(`${path} has no serious or critical axe violations`, async ({ page }) => {
         await page.goto(path);
         await expect(page.locator("html")).toHaveAttribute("data-theme", scheme);
+        // Let entrance animations finish, so contrast is measured on the settled frame.
+        await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"));
         const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
         const bad = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
         expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
@@ -22,11 +24,11 @@ for (const scheme of ["light", "dark"] as const) {
 test("tab bar labels are visible and the current tab is marked", async ({ page }) => {
   await page.goto("/closet");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of ["Today", "Closet", "Scan", "History", "Settings"]) {
+  for (const label of ["Outfits", "Closet", "Add", "History", "Settings"]) {
     await expect(nav.getByRole("link", { name: label })).toBeVisible();
   }
   await expect(nav.getByRole("link", { name: "Closet" })).toHaveAttribute("aria-current", "page");
-  const box = await nav.getByRole("link", { name: "Today" }).boundingBox();
+  const box = await nav.getByRole("link", { name: "Outfits" }).boundingBox();
   expect(box!.width).toBeGreaterThanOrEqual(44);
   expect(box!.height).toBeGreaterThanOrEqual(44);
 });
@@ -51,7 +53,33 @@ test("theme dialog switches the theme and remembers it", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Theme/ })).toContainText("Dark");
 });
 
-test("root sends a new visitor to Today", async ({ page }) => {
+test("a new visitor sees the welcome first, then lands on Add a piece", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/welcome$/);
+  await expect(page.getByRole("heading", { name: "Snap it once" })).toBeVisible();
+  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Add my first piece" }).click();
+  await expect(page).toHaveURL(/\/scan$/);
+  // Seen once: the next visit to / goes straight to today's outfits.
   await page.goto("/");
   await expect(page).toHaveURL(/\/today$/);
+  await expect(page.getByRole("heading", { name: "Today's outfits" })).toBeVisible();
+});
+
+test("today explains what is coming and what is still needed", async ({ page }) => {
+  await page.goto("/today");
+  await expect(page.getByRole("img", { name: /Example/ })).toBeVisible();
+  await expect(page.getByText("Still needed")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add your first piece" })).toHaveAttribute("href", "/scan");
+});
+
+test("manifest and icons are served", async ({ request }) => {
+  const res = await request.get("/manifest.webmanifest");
+  expect(res.ok()).toBe(true);
+  const m = await res.json();
+  expect(m.short_name).toBe("Wastra");
+  expect(m.display).toBe("standalone");
+  for (const icon of m.icons) expect((await request.get(icon.src)).ok()).toBe(true);
+  expect((await request.get("/favicon.ico")).ok()).toBe(true);
 });
