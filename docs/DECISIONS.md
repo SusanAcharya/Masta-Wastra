@@ -117,3 +117,7 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-15. Storage persistence is requested silently** after the third piece (no sheet mid batch, per Susan). Chrome and Edge decide without a prompt; Firefox shows its own; installed Safari apps get it.
 - **2026-10-15. WebGPU only with a real adapter** (`navigator.gpu.requestAdapter()` resolves non-null), else WASM threads.
 - **2026-10-15. `serwist.config.js` stays `.js`** (the CLI only looks for that name); Node prints a module type warning during build, harmless.
+- **2026-10-15. The service worker is written to `.next/static/sw.js` and served at `/sw.js` by a rewrite.** On Vercel, `public/` is collected before `serwist build` finishes, so a worker written to `public/` was a 404 in production. The worker filters itself out of its own precache.
+- **2026-10-15. Engine: a raincoat loses 0.4 on dry days** (found in the journey test: a mild dry day picked the raincoat on warmth alone). Rain days still prefer it.
+- **2026-10-15. When nothing fits the occasion, Pick relaxes the occasion** (every recognised piece may join; colour, weather and layers still rule) and says "Nothing in your closet is quite right for work, so this is the closest match." Pick never comes back empty while the closet can dress you.
+- **2026-10-15. Zod runs `jitless` in the browser**, so it never probes `Function("")` (blocked by the page CSP, reported by Chrome as an issue).

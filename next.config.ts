@@ -63,6 +63,11 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    // The worker lives in .next/static (serwist.config.js) but must be served from the root so
+    // its scope is the whole app.
+    return [{ source: "/sw.js", destination: "/_next/static/sw.js" }];
+  },
   turbopack: {
     // A stray lockfile in the home folder confuses root detection.
     root: __dirname,

@@ -6,5 +6,9 @@ import { serwist } from "@serwist/next/config";
 
 export default serwist({
   swSrc: "src/app/sw.ts",
-  swDest: "public/sw.js",
+  // Into Next's own build output, served at /sw.js by a rewrite (next.config.ts): Vercel collects
+  // public/ before this step finishes, so a worker written there never shipped.
+  swDest: ".next/static/sw.js",
+  // The worker must not precache its own script.
+  manifestTransforms: [async (entries) => ({ manifest: entries.filter((e) => !/\/sw\.js$/.test(e.url)), warnings: [] })],
 });
