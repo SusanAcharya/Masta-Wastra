@@ -25,9 +25,13 @@ Every [VERIFY] in the build prompt, checked against the primary source. Checked 
 ## Open items only Susan can confirm
 
 - [ ] **Gemini free tier limits** for `gemini-3.5-flash-lite` in AI Studio > Rate limits for the actual project. Google no longer publishes them. Defaults stay at `GEMINI_RPM=10`, `GEMINI_RPD=400`; lower them if AI Studio shows less.
-- [ ] **AI Studio project has no billing account linked.**
+- [x] **No billing account linked.** Confirmed 2026-10-14 by Susan's AI Studio screenshot: project `gen-lang-client-0711233403` ("Default Gemini Project") shows Billing Tier "Free tier" with "Set up billing". Follow up: move Masta Wastra to its own project, because that project also holds an older key that shares the per-project quota, and the first key was exposed in a screenshot (delete it).
 - [ ] **Upstash Redis via Vercel Marketplace needs no card** on Hobby. No primary source says either way. If a card is asked for, stop: we fall back to in-memory counters (section 7.3).
 - [ ] **Real device timings** (section 6.4): mid Android and iPhone. Filled in at M3.
+
+## Found along the way
+
+- **2026-10-14. AI Studio keys can now start with `AQ.`**, not only the classic `AIza` prefix (seen in AI Studio, key created 2026-10-14). The M4 bundle check must grep for both prefixes and for `GEMINI_API_KEY`.
 
 ## Full results
 
