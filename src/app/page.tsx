@@ -1,6 +1,9 @@
-import { redirect } from "next/navigation";
+import { RootRedirect } from "@/components/root-redirect";
 
-// M2 replaces this with a client check: /scan when the closet is empty, else /today.
 export default function Home() {
-  redirect("/today");
+  return (
+    <main id="main" className="min-h-dvh bg-bg">
+      <RootRedirect />
+    </main>
+  );
 }

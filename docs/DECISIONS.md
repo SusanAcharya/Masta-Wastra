@@ -42,3 +42,9 @@ Choices the build prompt left open, in the order they were made. Format: date, d
 - **2026-10-14. Global Gemini budget is 45 per Pacific day per model** (`GEMINI_RPD=45`, free tier is 50 RPD per project). One 15 item scan uses 15, so the app as a whole onboards about three closets a day before tagging rests. Manual tagging keeps the app fully usable.
 - **2026-10-14. Fallback model `gemini-3.1-flash-lite` (`GEMINI_FALLBACK_MODEL`) takes over when the primary's daily budget is spent.** Its quota is separate (also 50 RPD), so about 90 tags a day in total. Budget counters are kept per model.
 - **2026-10-14. Per install limit lowered to 30 tags per day** (prompt said 120), so one person cannot drain the shared budget. 20 per 10 minutes and 40 per IP per day stay as written.
+
+## Deploy
+
+- **2026-10-14. Deployed by Susan to Vercel Hobby at https://masta-wastra.vercel.app** from `main` (git integration, so every push deploys). At M4, set `ALLOWED_ORIGINS=https://masta-wastra.vercel.app` plus the Gemini and Upstash env vars on the Vercel project.
+- **2026-10-14. Susan keeps the existing Gemini key** in "Default Gemini Project" (`gen-lang-client-0711233403`), shared with an older key, accepting the shared 50 RPD quota and the earlier screenshot exposure.
+- **2026-10-14. Upstash Redis connected to the Vercel project** `masta-wastra` (Production + Preview) with env prefix `KV`, so the function reads `KV_REST_API_URL` and `KV_REST_API_TOKEN` (and also accepts `UPSTASH_REDIS_REST_URL` / `_TOKEN` if renamed). Local dev without these vars falls back to in-memory counters.
