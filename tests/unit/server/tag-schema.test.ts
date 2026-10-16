@@ -134,9 +134,13 @@ describe("Gemini call", () => {
       ok: false,
       kind: "invalid_output",
     });
-    expect(await call(async () => Promise.reject(Object.assign(new Error("boom"), { status: 500 })))).toEqual({
+    expect(await call(async () => Promise.reject(Object.assign(new Error("boom"), { status: 400 })))).toEqual({
       ok: false,
       kind: "upstream",
+    });
+    expect(await call(async () => Promise.reject(Object.assign(new Error("overloaded"), { status: 500 })))).toEqual({
+      ok: false,
+      kind: "quota_minute",
     });
   });
 
@@ -151,6 +155,8 @@ describe("Gemini call", () => {
     expect(classifyError(day)).toBe("quota_day");
     expect(classifyError(minute)).toBe("quota_minute");
     expect(classifyError(new Error("network"))).toBe("upstream");
+    // Seen live 2026-10-16: 503 UNAVAILABLE "high demand" from both models.
+    expect(classifyError(Object.assign(new Error("This model is currently experiencing high demand."), { status: 503 }))).toBe("quota_minute");
   });
 });
 

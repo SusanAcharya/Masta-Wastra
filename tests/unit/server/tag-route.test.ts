@@ -275,8 +275,20 @@ describe("Gemini failures", () => {
   const quota = (kind: "Day" | "Minute") =>
     Object.assign(new Error(`{"quotaId":"GenerateRequestsPer${kind}PerProjectPerModel-FreeTier"}`), { status: 429 });
 
+  it("a Google overload (503) on the primary falls back to the other model", async () => {
+    gemini.mockRejectedValueOnce(Object.assign(new Error("This model is currently experiencing high demand."), { status: 503 }));
+    gemini.mockResolvedValueOnce({ text: JSON.stringify(goodGeminiTag) });
+    expect(await call(request())).toMatchObject({ status: 200 });
+  });
+
+  it("both models overloaded: 429 rate_limited, so the client retries soon", async () => {
+    gemini.mockRejectedValue(Object.assign(new Error("high demand"), { status: 503 }));
+    expect(await call(request())).toMatchObject({ status: 429, body: { code: "rate_limited" } });
+    gemini.mockReset();
+  });
+
   it("502 upstream when Gemini errors or answers with invalid JSON", async () => {
-    gemini.mockRejectedValueOnce(Object.assign(new Error("overloaded"), { status: 503 }));
+    gemini.mockRejectedValueOnce(Object.assign(new Error("bad request"), { status: 400 }));
     expect(await call(request())).toMatchObject({ status: 502, body: { code: "upstream" } });
     gemini.mockResolvedValueOnce({ text: "{oops" });
     expect(await call(request())).toMatchObject({ status: 502, body: { code: "upstream" } });

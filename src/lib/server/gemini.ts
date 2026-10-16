@@ -86,6 +86,10 @@ export async function tagWithGemini(
 // tell a busy minute from a spent day.
 export function classifyError(err: unknown): "quota_day" | "quota_minute" | "upstream" {
   const status = typeof err === "object" && err && "status" in err ? Number((err as { status: unknown }).status) : NaN;
+  // Google's own overload ("This model is currently experiencing high demand", 503) and other
+  // server side blips pass in a minute: treat them like a busy minute, so the fallback model is
+  // tried and the client retries soon, instead of failing the piece as upstream.
+  if (status === 500 || status === 502 || status === 503 || status === 504) return "quota_minute";
   if (status !== 429) return "upstream";
   const message = err instanceof Error ? err.message : String((err as { message?: unknown }).message ?? "");
   return /per ?day|PerDay|daily/i.test(message) ? "quota_day" : "quota_minute";
