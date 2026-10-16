@@ -140,3 +140,4 @@ Susan saw a real result ("the background is not properly transparent... it shoul
 - **2026-10-16. The quality check (6.5) measures the background removal before the person is cut away**, so a hoodie in a full body photo is not flagged "did not cut cleanly".
 - **2026-10-16. Shorts and sandals are ruled out on cool days** (the prompt said cold and colder) and lose 2.0 on mild days, so they win only when nothing else fits. Found in the journey test: a hoodie with shorts at 13 to 19 °C.
 - **2026-10-16. A Google 5xx (for example 503 "high demand", seen live on both models) counts as a busy minute:** the fallback model is tried, and when both are busy the client gets 429 and retries soon. Before, it failed the request as 502 `upstream`.
+- **2026-10-16. While the app is visible, the tag runner sets a timer for the queue's next due job** (a retry after a busy minute, or a job whose 2 minute lease ran out after a reload). Still nothing while hidden.
