@@ -30,7 +30,9 @@ export interface Settings {
   onboardedAt?: string;
   introSeenAt?: string; // the welcome carousel was seen or skipped
   scanGoal: 10 | 15;
-  cardLayout: "flat" | "stacked"; // 10.1
+  cardLayout: "flat" | "stacked"; // 10.1 (superseded by outfitView)
+  outfitView?: "figure" | "flat"; // paper doll (default) or flat lay
+  figure?: "female" | "male"; // the paper doll's body, asked once
   cutoutModel: "isnet_quint8" | "isnet_fp16"; // 6.1
   modelReady?: boolean; // cutout model downloaded once
   persistAsked?: boolean; // navigator.storage.persist() asked after the 3rd item

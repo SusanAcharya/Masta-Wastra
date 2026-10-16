@@ -83,3 +83,12 @@ describe("which pieces may join outfits", () => {
     expect(isDressable({ ...base, archived: true })).toBe(false);
   });
 });
+
+import { renameColour } from "@/lib/recut";
+describe("renaming after a re-cut", () => {
+  it("swaps a leading colour word only", () => {
+    expect(renameColour("Olive loafers", "olive", "brown")).toBe("Brown loafers");
+    expect(renameColour("Leather loafers", "olive", "brown")).toBe("Leather loafers");
+    expect(renameColour("Navy shirt", "navy", "navy")).toBe("Navy shirt");
+  });
+});

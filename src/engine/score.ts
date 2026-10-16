@@ -74,6 +74,7 @@ export const ITEM_REPEAT_STEP = 0.15;
 export const YESTERDAY_PENALTY = 0.5; // per core item worn yesterday, kept by the small closet rule
 export const ACCESSORY_BONUS = 0.5; // hat on a hot high UV day, scarf, gloves or hat in the cold
 export const WIND_PENALTY = 0.3; // per skirt or dress on a windy day
+export const MILD_BARE_LEGS_PENALTY = 2.0; // shorts or sandals on a mild day: only if nothing else fits
 export const DRY_RAINWEAR_PENALTY = 0.4; // a raincoat on a dry day: fine, but any other fitting layer is better
 export const COLOR_FLOOR = 0.5; // below this S_color, or with two bold patterns, an outfit is a clash (deal.ts keeps it out)
 export const COLOR_GUARD_FROM = 0.65; // below this S_color the score drops faster
@@ -368,6 +369,11 @@ function windPenalty(ctx: ScoreContext, core: Prep[]): number {
 
 // Rain gear is rewarded on rain days (rainFit) but was never discouraged on dry ones, so a
 // raincoat could win a sunny day on warmth alone.
+function mildBareLegs(ctx: ScoreContext, core: Prep[]): number {
+  if (ctx.flags.band !== "mild") return 0;
+  return core.some((p) => p.item.subtype === "shorts" || p.item.subtype === "sandals") ? -MILD_BARE_LEGS_PENALTY : 0;
+}
+
 function dryRainwear(ctx: ScoreContext, core: Prep[]): number {
   if (ctx.flags.rain) return 0;
   return core.some((p) => p.item.subtype === "raincoat") ? -DRY_RAINWEAR_PENALTY : 0;
@@ -468,7 +474,7 @@ export function scoreCore(
     w.neverWornBoost * fNever +
     w.patternBalance * fPattern +
     w.vibeCohesion * fVibe;
-  const weather = windPenalty(ctx, core) + dryRainwear(ctx, core);
+  const weather = windPenalty(ctx, core) + dryRainwear(ctx, core) + mildBareLegs(ctx, core);
   const guard = -COLOR_GUARD_SLOPE * Math.max(0, COLOR_GUARD_FROM - fColor);
   const score = sFeatures + ITEM_AFFINITY_SCALE * itemAff + PAIR_AFFINITY_SCALE * pairAff + weather + guard;
 

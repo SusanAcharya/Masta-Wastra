@@ -1,6 +1,9 @@
 /// <reference lib="webworker" />
 // Background removal and post-processing, off the main thread (6.1 steps 3 and 4).
 import { extractColors, opaqueShare, trimBounds } from "@/lib/colors";
+import { applyGarmentMask, cleanAlpha } from "@/lib/mask";
+import { GARMENTS, PERSON, readParse, type GarmentGroup } from "@/lib/parsing";
+import { loadClothes, parseClothes } from "./engines/clothes";
 import { fitWithin } from "@/lib/image";
 import { imgly } from "./engines/imgly";
 import type { CutoutResult, WorkerRequest, WorkerResponse } from "./protocol";
@@ -26,7 +29,31 @@ async function cutout(req: Extract<WorkerRequest, { type: "cutout" }>): Promise<
   fctx.drawImage(bitmap, 0, 0);
   bitmap.close();
   const px = fctx.getImageData(0, 0, full.width, full.height);
-  const coverage = opaqueShare(px);
+  // The "did not cut cleanly" check (6.5) is about the background removal, so it measures the
+  // matte before a person is cut away (a hoodie on a full body shot is small, and fine).
+  const matteCoverage = opaqueShare(px);
+
+  // A product photo often shows a person wearing the piece: keep only the garment the photo is
+  // about (the largest one), so the cutout is the t-shirt, not a man in a t-shirt and jeans.
+  let detected: GarmentGroup | undefined;
+  let person = false;
+  try {
+    const photo = await createImageBitmap(req.photo);
+    const parsed = await parseClothes(photo);
+    photo.close();
+    const reading = readParse(parsed.labels);
+    detected = reading.target;
+    if (reading.person && reading.target) {
+      person = true;
+      applyGarmentMask(px, parsed.labels, parsed.width, parsed.height, GARMENTS[reading.target].labels, 2, PERSON);
+    }
+  } catch (err) {
+    // The parser is an improvement, not a requirement: without it the matte is used as is.
+    console.warn("clothes parser unavailable:", err);
+  }
+  cleanAlpha(px); // specks and haze the background removal left behind
+  fctx.putImageData(px, 0, 0);
+  const coverage = person ? matteCoverage : opaqueShare(px);
   const box = trimBounds(px);
 
   const trimmed = new OffscreenCanvas(box.w, box.h);
@@ -45,6 +72,8 @@ async function cutout(req: Extract<WorkerRequest, { type: "cutout" }>): Promise<
     thumb: await encode(thumbCanvas, 0.8),
     colors,
     coverage,
+    detected,
+    person,
     ms: Math.round(performance.now() - started),
   };
 }
@@ -58,6 +87,7 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
         device: req.device,
         onProgress: (key, current, total) => post({ type: "progress", id: req.id, key, current, total }),
       });
+      await loadClothes((current, total) => post({ type: "progress", id: req.id, key: "fetch:/clothes-parser", current, total }));
       post({ type: "done", id: req.id });
     } else {
       post({ type: "done", id: req.id, result: await cutout(req) });

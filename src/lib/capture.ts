@@ -7,12 +7,17 @@ import type { ItemColor } from "@/engine/types";
 import { cutout } from "@/workers/cutout-client";
 import { extractColors } from "./colors";
 import { canvasToBlob, decode, fitWithin, makeCanvas, preparePhoto, type Encoded } from "./image";
+import type { GarmentGroup } from "./parsing";
+
+// Bumped when the cutout pipeline improves, so older pieces can be offered a re-cut.
+export const CUT_VERSION = 2;
 
 export interface Captured {
   images: { original?: NewImage; cutout: NewImage; thumb: NewImage };
   colors: ItemColor[];
   quality: "auto" | "manual";
   coverage?: number;
+  detected?: GarmentGroup; // what the clothes parser saw
   ms?: number;
 }
 
@@ -38,6 +43,7 @@ export async function autoCutout(
     colors: r.colors,
     quality: "auto",
     coverage: r.coverage,
+    detected: r.detected,
     ms: r.ms,
   };
 }

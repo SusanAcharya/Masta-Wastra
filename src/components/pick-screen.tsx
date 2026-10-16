@@ -6,6 +6,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { Icon } from "@/components/icons/icon";
 import { ExampleDeck } from "@/components/lounge/card-stacked-deck/example-deck";
 import { ChoiceRow } from "@/components/lounge/mobile-filter-chips-list/chips";
+import { FigureChoice } from "@/components/figure/figure-choice";
 import { LocationSheet } from "@/components/location-sheet";
 import { OutfitCard } from "@/components/outfit-card";
 import { PageHeader } from "@/components/page-header";
@@ -94,8 +95,10 @@ export function PickScreen() {
     return next;
   }
 
-  async function pick(more: boolean) {
+  const [chooseFigure, setChooseFigure] = useState(false);
+  async function pick(more: boolean, figureChosen = false) {
     if (!weather) return setPlaceOpen(true);
+    if (!figureChosen && !settings?.figure && (settings?.outfitView ?? "figure") === "figure") return setChooseFigure(true);
     setBusy(true);
     try {
       const c = await ensureCtx();
@@ -149,6 +152,10 @@ export function PickScreen() {
           shoes: get(slots.shoes),
           accessory: get(slots.accessory),
         },
+        figure:
+          (settings?.outfitView ?? "figure") === "figure"
+            ? { items: shown.dealt.itemIds.map((id) => ctx.items.get(id)).filter((i): i is NonNullable<typeof i> => !!i), body: settings?.figure ?? "female" }
+            : undefined,
         reason: shown.dealt.reason,
         weather: weather?.snapshot,
         units,
@@ -276,7 +283,7 @@ export function PickScreen() {
                 exit={calm ? { opacity: 0, transition: { duration: 0.12 } } : { opacity: 0, x: exit * 320, rotate: exit * 8, transition: { duration: 0.28 } }}
                 transition={calm ? { duration: 0.12 } : { type: "spring", stiffness: 260, damping: 26 }}
               >
-                <OutfitCard dealt={shown.dealt} items={ctx.items} />
+                <OutfitCard dealt={shown.dealt} items={ctx.items} view={settings?.outfitView ?? "figure"} body={settings?.figure} />
                 {!calm ? (
                   <>
                     <motion.span
@@ -384,6 +391,15 @@ export function PickScreen() {
       </p>
 
       <LocationSheet open={placeOpen} onClose={() => setPlaceOpen(false)} onPlace={setPlace} onManual={setManual} />
+      <FigureChoice
+        open={chooseFigure}
+        onClose={() => setChooseFigure(false)}
+        onPick={async (figure) => {
+          setChooseFigure(false);
+          await updateSettings(db, { figure });
+          await pick(false, true); // carry on: the person asked for an outfit
+        }}
+      />
     </>
   );
 }

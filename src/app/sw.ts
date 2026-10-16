@@ -92,6 +92,15 @@ const serwist = new Serwist({
       }),
     },
     {
+      // The clothes parser (about 29 MB from Hugging Face, which redirects to its CDN) and the
+      // self-hosted ONNX runtime: downloaded once, kept a year.
+      matcher: ({ url, sameOrigin }) => url.hostname === "huggingface.co" || url.hostname.endsWith(".hf.co") || (sameOrigin && url.pathname.startsWith("/ort/")),
+      handler: new CacheFirst({
+        cacheName: "clothes-model-v1",
+        plugins: [new CacheableResponsePlugin({ statuses: [0, 200] }), new ExpirationPlugin({ maxAgeSeconds: 365 * 24 * 3600, maxEntries: 10 })],
+      }),
+    },
+    {
       matcher: ({ url }) => url.hostname === "api.open-meteo.com" || url.hostname === "geocoding-api.open-meteo.com",
       handler: new StaleWhileRevalidate({
         cacheName: "open-meteo",

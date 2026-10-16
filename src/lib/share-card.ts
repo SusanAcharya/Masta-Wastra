@@ -3,7 +3,9 @@
 // The outfit as a picture to save or send (10.6), drawn on the device: no server.
 import { getDb } from "@/db/schema";
 import type { Item, WeatherSnapshot } from "@/engine/types";
+import { figureSvg } from "@/components/figure/paths";
 import { formatRange } from "@/engine";
+import { fitPiece, placeOutfit, type Body } from "./figure";
 
 const W = 1080;
 const H = 1350;
@@ -45,8 +47,34 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, x: number, y: number,
   if (row) ctx.fillText(row, x, y);
 }
 
+async function drawOnFigure(ctx: CanvasRenderingContext2D, items: Item[], body: Body) {
+  // The figure fills an 800 px tall stage: grid units (400 x 1000) times 0.8.
+  const scale = 0.8;
+  const ox = (W - 400 * scale) / 2;
+  const oy = 230;
+  const svg = figureSvg(body, "#d7cbbc", "#8e8275");
+  const fig = new Image();
+  fig.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  await fig.decode();
+  ctx.drawImage(fig, ox, oy, 400 * scale, 1000 * scale);
+  for (const p of placeOutfit(items, body)) {
+    const bmp = await bitmapOf(p.item);
+    if (!bmp) continue;
+    const r = fitPiece(p.box, p.zone, bmp.width, bmp.height);
+    ctx.save();
+    if (p.item.cutoutQuality !== "manual") {
+      ctx.shadowColor = "rgba(42,33,27,0.18)";
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 3;
+    }
+    ctx.drawImage(bmp, ox + r.x * scale, oy + r.y * scale, r.w * scale, r.h * scale);
+    ctx.restore();
+  }
+}
+
 export async function renderShareCard(opts: {
   pieces: { outer?: Item; top?: Item; bottom?: Item; shoes?: Item; accessory?: Item };
+  figure?: { items: Item[]; body: Body };
   reason: string;
   weather?: WeatherSnapshot;
   units: "c" | "f";
@@ -75,6 +103,14 @@ export async function renderShareCard(opts: {
   ctx.textAlign = "right";
   ctx.fillText(opts.weather ? `${date} · ${formatRange(opts.weather.feelsMin, opts.weather.feelsMax, opts.units)}` : date, W - 60, 130);
   ctx.textAlign = "left";
+
+  if (opts.figure) {
+    await drawOnFigure(ctx, opts.figure.items, opts.figure.body);
+    ctx.fillStyle = "#2a211b";
+    ctx.font = `400 40px ${text}`;
+    wrap(ctx, opts.reason, 60, 1150 - 40, W - 120, 54);
+    return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("no image"))), "image/png"));
+  }
 
   const { outer, top, bottom, shoes, accessory } = opts.pieces;
   const draw = async (item: Item | undefined, x: number, y: number, w: number, h: number) => {

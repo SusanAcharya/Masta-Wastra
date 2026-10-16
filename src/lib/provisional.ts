@@ -2,6 +2,7 @@
 // off and the piece waits for a tag). Never used for outfits: the engine only sees pieces
 // whose tags are done or set by hand.
 import { SUBTYPES, type Category, type Subtype } from "@/engine/types";
+import { GARMENTS, type GarmentGroup } from "./parsing";
 import { defaultVibes, defaultWarmth } from "./vocab";
 
 export function guessFromShape(w: number, h: number): { category: Category; subtype: Subtype } {
@@ -11,8 +12,9 @@ export function guessFromShape(w: number, h: number): { category: Category; subt
   return { category: "top", subtype: "tshirt" };
 }
 
-export function provisionalTags(w: number, h: number) {
-  const { category, subtype } = guessFromShape(w, h);
+export function provisionalTags(w: number, h: number, detected?: GarmentGroup) {
+  // The clothes parser's reading beats the shape, when there is one.
+  const { category, subtype } = detected ? GARMENTS[detected] : guessFromShape(w, h);
   return {
     category,
     subtype,

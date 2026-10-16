@@ -17,6 +17,7 @@ import { copy } from "@/lib/copy";
 import { OCCASION_LABELS, PATTERN_LABELS, VIBE_LABELS, WARMTH_LABELS } from "@/lib/vocab";
 import { ItemDetail } from "./item-detail";
 import { ItemTile } from "./item-tile";
+import { RecutBanner } from "./recut-banner";
 
 const FAMILIES: { id: string; label: string; swatch: string }[] = [
   { id: "dark", label: "Black and dark", swatch: "#1c1c1c" },
@@ -103,6 +104,8 @@ export function ClosetScreen() {
           </Link>
         }
       />
+
+      <RecutBanner />
 
       <div className="-mx-5 overflow-x-auto px-5 pb-2" role="group" aria-label={copy.closet.filterLabel}>
         <div className="flex w-max gap-2">

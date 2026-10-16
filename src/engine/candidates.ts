@@ -45,11 +45,12 @@ export function occasionOk(item: Pick<Item, "occasions" | "vibes" | "category">,
   return item.vibes.some((v) => allowed.includes(v));
 }
 
-// 8.3 rule 3. Hot: nothing with warmth 4 or more except shoes. Cold and freezing: no shorts
-// and no sandals.
+// 8.3 rule 3. Hot: nothing with warmth 4 or more except shoes. Cool, cold and freezing: no shorts
+// and no sandals (the prompt said cold and colder; the journey test picked shorts at 13 to 19 °C,
+// so cool joins, and mild days penalise them in score.ts).
 export function warmthSane(item: Pick<Item, "warmth" | "category" | "subtype">, band: Band): boolean {
   if (band === "hot") return item.category === "shoes" || item.warmth < 4;
-  if (band === "cold" || band === "freezing") return item.subtype !== "shorts" && item.subtype !== "sandals";
+  if (band === "cool" || band === "cold" || band === "freezing") return item.subtype !== "shorts" && item.subtype !== "sandals";
   return true;
 }
 

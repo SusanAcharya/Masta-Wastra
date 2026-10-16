@@ -13,7 +13,7 @@ const policy = (evalAllowed: boolean) =>
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data:",
     "font-src 'self'",
-    `connect-src 'self' blob: data: https://api.open-meteo.com https://geocoding-api.open-meteo.com https://staticimgly.com${dev ? " ws:" : ""}`,
+    `connect-src 'self' blob: data: https://api.open-meteo.com https://geocoding-api.open-meteo.com https://staticimgly.com https://huggingface.co https://*.hf.co${dev ? " ws:" : ""}`,
     "worker-src 'self' blob:",
     "manifest-src 'self'",
     "frame-ancestors 'none'",

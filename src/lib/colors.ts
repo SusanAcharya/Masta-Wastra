@@ -2,7 +2,7 @@
 // Clusters under 8% share are dropped, the top 3 kept, shares renormalised. Pure and
 // deterministic (same pixels, same colours), so it runs in the worker and in tests alike.
 import type { ItemColor } from "@/engine/types";
-import { nearestColorName, oklabToHex, rgbToOklab, type Lab } from "./oklab";
+import { hueDelta, labToLch, nearestColorName, oklabToHex, rgbToOklab, type Lab } from "./oklab";
 
 export interface Pixels {
   data: Uint8ClampedArray | Uint8Array; // RGBA
@@ -79,9 +79,7 @@ export function extractColors(px: Pixels, opts: ExtractOptions = {}): ItemColor[
   // perceptually the same (OKLab distance under 0.06, or same name), weighted by share.
   const merged: { lab: Lab; share: number }[] = [];
   for (const c of centers.map((lab, i) => ({ lab, share: counts[i] / samples.length })).sort((a, b) => b.share - a.share)) {
-    const twin = merged.find(
-      (m) => Math.sqrt(dist2(m.lab, c.lab)) < 0.06 || nearestColorName(oklabToHex(m.lab)) === nearestColorName(oklabToHex(c.lab)),
-    );
+    const twin = merged.find((m) => sameCloth(m.lab, c.lab));
     if (!twin) merged.push({ ...c });
     else {
       const t = twin.share + c.share;
@@ -124,6 +122,18 @@ function initCenters(samples: Lab[], k: number): Lab[] {
     centers.push(far);
   }
   return centers;
+}
+
+// One cloth colour seen in light and shadow: close in OKLab, the same name, the same hue with
+// similar chroma (lightness may differ a lot), or two greys of similar lightness.
+function sameCloth(p: Lab, q: Lab): boolean {
+  if (Math.sqrt(dist2(p, q)) < 0.06) return true;
+  if (nearestColorName(oklabToHex(p)) === nearestColorName(oklabToHex(q))) return true;
+  const a = labToLch(p);
+  const b = labToLch(q);
+  if (a.C > 0.05 && b.C > 0.05) return hueDelta(a.h, b.h) < 22 && Math.abs(a.C - b.C) < 0.09;
+  if (a.C < 0.035 && b.C < 0.035) return Math.abs(a.L - b.L) < 0.12;
+  return false;
 }
 
 const dist2 = (p: Lab, q: Lab) => (p.L - q.L) ** 2 + (p.a - q.a) ** 2 + (p.b - q.b) ** 2;

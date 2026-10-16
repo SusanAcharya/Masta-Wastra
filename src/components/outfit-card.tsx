@@ -2,11 +2,33 @@
 
 import type { DealtOutfit } from "@/engine";
 import type { Item } from "@/engine/types";
+import type { Body } from "@/lib/figure";
 import { CutoutImage } from "./cutout-image";
+import { OnFigure } from "./figure/on-figure";
 
 // Flat lay (10.1): outer or top on the left, bottom on the right, shoes along the bottom,
 // an accessory tucked top right. The pieces are the user's own cutouts.
-export function OutfitCard({ dealt, items }: { dealt: DealtOutfit; items: Map<string, Item> }) {
+export function OutfitCard({
+  dealt,
+  items,
+  view = "flat",
+  body,
+  mini = false,
+}: {
+  dealt: DealtOutfit;
+  items: Map<string, Item>;
+  view?: "figure" | "flat";
+  body?: Body;
+  mini?: boolean;
+}) {
+  if (view === "figure" && body) {
+    const pieces = dealt.itemIds.map((id) => items.get(id)).filter((i): i is Item => !!i);
+    return (
+      <div className="flex justify-center bg-bg px-4 pt-5 pb-3">
+        <OnFigure items={pieces} body={body} className={mini ? "h-[300px]" : "h-[min(58vh,540px)]"} />
+      </div>
+    );
+  }
   const get = (id?: string) => (id ? items.get(id) : undefined);
   const slots = dealt.slots as Record<string, string | undefined>;
   const outer = get(slots.outer) ?? get(slots.mid);

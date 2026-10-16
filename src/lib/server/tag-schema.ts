@@ -47,7 +47,10 @@ export function geminiJsonSchema(): Record<string, unknown> {
 // OKLab distance under which a Gemini name counts as describing a measured colour. The 24
 // anchors sit roughly 0.08 to 0.2 apart, so this accepts a neighbouring name ("denim" for a
 // measured blue) but not a different colour family.
-export const NAME_MATCH_DELTA = 0.16;
+export const NAME_MATCH_DELTA = 0.12;
+// Gemini's name is used only when it is about as close as the nearest anchor: it once named
+// brown loafers "olive", which the looser rule (any name within 0.16) let through.
+export const NAME_SLACK = 0.025;
 
 /**
  * Client hex values are the truth (7.2); Gemini only names them. Each measured colour, in
@@ -67,11 +70,13 @@ export function mergeColors(measured: MeasuredColor[], names: readonly ColorName
         if (!best || d < best.d) best = { name, d };
       }
       let name: ColorName;
-      if (best && best.d <= NAME_MATCH_DELTA) {
+      const nearest = nearestColorName(c.hex);
+      const nearestD = deltaE(lab, hexToOklab(COLOR_NAMES[nearest]));
+      if (best && best.d <= NAME_MATCH_DELTA && best.d <= nearestD + NAME_SLACK) {
         name = best.name;
         unused.splice(unused.indexOf(best.name), 1);
       } else {
-        name = nearestColorName(c.hex);
+        name = nearest;
       }
       return { hex: c.hex.toLowerCase(), name, share: round(c.share / total) };
     });

@@ -26,3 +26,27 @@ describe("rain gear on dry days", () => {
     expect(outfit?.slots.outer).toBe("rain");
   });
 });
+
+describe("bare legs on mild and cool days", () => {
+  const closet = () => {
+    resetIds();
+    return [
+      item({ subtype: "hoodie", hex: HEX.grey }),
+      item({ id: "shorts", subtype: "shorts", hex: HEX.denim }),
+      item({ id: "jeans", subtype: "jeans", hex: HEX.denim }),
+      item({ subtype: "sneakers", hex: HEX.white }),
+    ];
+  };
+  const base = { occasion: "casual" as const, localDate: "2026-10-14", seed: 1 };
+
+  it("prefers jeans to shorts at 13 to 19 °C", () => {
+    const { outfit } = pickOutfit({ ...base, items: closet(), weather: weather({ feelsMax: 19, feelsMin: 13 }) });
+    expect(outfit?.slots.bottom).toBe("jeans");
+  });
+
+  it("never picks shorts on a cool day", () => {
+    const items = closet().filter((i) => i.id !== "jeans");
+    const { outfit } = pickOutfit({ ...base, items, weather: weather({ feelsMax: 12, feelsMin: 6 }) });
+    expect(outfit?.slots.bottom).not.toBe("shorts");
+  });
+});

@@ -153,3 +153,15 @@ describe("Gemini call", () => {
     expect(classifyError(new Error("network"))).toBe("upstream");
   });
 });
+
+describe("colour names from Gemini", () => {
+  it("does not let Gemini call brown loafers olive", async () => {
+    const { mergeColors } = await import("@/lib/server/tag-schema");
+    const colors = mergeColors([{ hex: "#7a482c", share: 1 }], ["olive"]);
+    expect(colors[0].name).toBe("brown");
+  });
+  it("still uses Gemini's name when it fits as well as the nearest one", async () => {
+    const { mergeColors } = await import("@/lib/server/tag-schema");
+    expect(mergeColors([{ hex: "#c4b08f", share: 1 }], ["beige"])[0].name).toBe("beige");
+  });
+});

@@ -11,7 +11,7 @@ import { getDb } from "@/db/schema";
 import { useLive } from "@/db/use-live";
 import { useSettings } from "@/db/use-settings";
 import { BADGES, earnedBadges, nextBadge } from "@/lib/badges";
-import { autoCutout, cleanCut, manualCrop, prepare, type Captured, type CropRect, type Prepared } from "@/lib/capture";
+import { autoCutout, cleanCut, CUT_VERSION, manualCrop, prepare, type Captured, type CropRect, type Prepared } from "@/lib/capture";
 import { copy } from "@/lib/copy";
 import { useCalm } from "@/lib/motion";
 import { hexToOklch } from "@/lib/oklab";
@@ -38,7 +38,12 @@ interface Job {
 }
 
 // Bytes the first download fetches, from resources.json for imgly 1.7.0 (docs/VERIFICATIONS.md).
-const MODEL_BYTES = { isnet_quint8: 44_348_940 + 11_819_815 + 25_539, isnet_fp16: 88_152_708 + 11_819_815 + 25_539 };
+// Plus the clothes parser that removes people from product photos (about 29 MB).
+const PARSER_BYTES = 28_837_959;
+const MODEL_BYTES = {
+  isnet_quint8: 44_348_940 + 11_819_815 + 25_539 + PARSER_BYTES,
+  isnet_fp16: 88_152_708 + 11_819_815 + 25_539 + PARSER_BYTES,
+};
 
 const SLOT_KIND: Record<string, GarmentKind> = { top: "top", bottom: "bottom", shoes: "shoes", outer: "outer", any: "dress" };
 
@@ -177,7 +182,7 @@ export function ScanFlow() {
     if (!job?.captured || !settings) return;
     const { captured } = job;
     const colors = captured.colors.length ? captured.colors : [{ hex: "#808080", name: "grey", share: 1 }];
-    const guess = provisionalTags(captured.images.cutout.w, captured.images.cutout.h);
+    const guess = provisionalTags(captured.images.cutout.w, captured.images.cutout.h, captured.detected);
     const ai = settings.aiConsent !== false;
     const { item, activeCount } = await addItem(db, {
       item: {
@@ -191,6 +196,7 @@ export function ScanFlow() {
         tagSource: ai ? "ai" : "manual",
         tagStatus: ai ? "queued" : "pending",
         cutoutQuality: captured.quality,
+        cutVersion: captured.quality === "auto" ? CUT_VERSION : undefined,
         archived: false,
       },
       images: captured.images,

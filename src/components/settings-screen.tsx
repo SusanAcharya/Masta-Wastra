@@ -140,6 +140,20 @@ export function SettingsScreen() {
 
       <SettingsSection title={copy.settings.appearance}>
         <ThemeRow />
+        <ActionRow
+          icon="user"
+          title={copy.figure.setting}
+          support={settings.figure === "male" ? copy.figure.male : settings.figure === "female" ? copy.figure.female : copy.settings.placeNone}
+          onClick={() => set({ figure: settings.figure === "female" ? "male" : "female" })}
+          trailing={<span className="text-[15px] text-ink-2">{settings.figure === "male" ? copy.figure.male : copy.figure.female}</span>}
+        />
+        <SwitchRow
+          icon="layers"
+          title={copy.figure.view}
+          support={(settings.outfitView ?? "figure") === "figure" ? copy.figure.viewFigure : copy.figure.viewFlat}
+          checked={(settings.outfitView ?? "figure") === "figure"}
+          onChange={(on) => set({ outfitView: on ? "figure" : "flat" })}
+        />
         <SwitchRow
           icon="eye"
           title={copy.settings.calm}

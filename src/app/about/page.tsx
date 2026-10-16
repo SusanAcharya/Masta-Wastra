@@ -43,6 +43,7 @@ export default function AboutPage() {
                 <a href={OPEN_METEO_URL}>{copy.about.weather}</a>. {copy.about.weatherLicence}
               </li>
               <li>{copy.about.cutout}</li>
+              <li>{copy.about.parser}</li>
               <li>{copy.about.fonts}</li>
               <li>{copy.about.icons}</li>
             </ul>

@@ -123,6 +123,7 @@ export interface Item {
   cutoutId: string;
   thumbId: string;
   cutoutQuality: "auto" | "manual"; // 6.5: manual = soft rectangular crop fallback
+  cutVersion?: number; // 2 = clothes parser + clean up (people removed from product photos)
   archived: boolean; // "Retired" items stay in history
   price?: number; // optional, for cost per wear (10.3)
   notes?: string;

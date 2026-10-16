@@ -123,7 +123,7 @@ export function HistoryScreen() {
           <div className="mt-4" aria-live="polite">
             {selected ? (
               <div className="mx-auto max-w-[300px] overflow-hidden rounded-ui border border-line bg-surface">
-                <OutfitCard dealt={asDealt(selected, byId)} items={byId} />
+                <OutfitCard dealt={asDealt(selected, byId)} items={byId} view={settings?.outfitView ?? "figure"} body={settings?.figure ?? "female"} mini />
               </div>
             ) : (
               <p className="text-[14px] text-ink-2">{copy.history.dayEmpty}</p>

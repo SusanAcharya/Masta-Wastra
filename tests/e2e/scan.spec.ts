@@ -77,6 +77,8 @@ test.describe("closet scan", () => {
     await expect(page.getByRole("region", { name: "Today's weather" })).toContainText("Kathmandu");
 
     await page.getByRole("button", { name: "Pick my outfit" }).click();
+    // First time: which figure to dress (asked once), then the pick carries on.
+    await page.getByRole("dialog", { name: "Show outfits on" }).getByRole("button", { name: "Woman", exact: true }).click();
     const card = page.getByRole("article").last();
     await expect(card).toBeVisible();
     const first = await card.getAttribute("aria-label");

@@ -74,3 +74,23 @@ describe("cutout geometry", () => {
     expect(trimBounds(frame(10, 10, [{ x: 0, y: 0, w: 10, h: 10, rgba: [1, 1, 1, 255] }]))).toEqual({ x: 0, y: 0, w: 10, h: 10 });
   });
 });
+
+describe("one cloth colour in light and shadow", () => {
+  it("names a rust top in sun and shade as one colour", () => {
+    const px = frame(100, 10, [
+      { x: 0, y: 0, w: 38, h: 10, rgba: [132, 46, 37, 255] }, // shade
+      { x: 38, y: 0, w: 35, h: 10, rgba: [185, 76, 64, 255] }, // mid
+      { x: 73, y: 0, w: 27, h: 10, rgba: [230, 127, 109, 255] }, // light
+    ]);
+    const colors = extractColors(px);
+    expect(colors).toHaveLength(1);
+  });
+
+  it("still keeps navy and white apart", () => {
+    const px = frame(100, 10, [
+      { x: 0, y: 0, w: 60, h: 10, rgba: [31, 42, 68, 255] },
+      { x: 60, y: 0, w: 40, h: 10, rgba: [244, 243, 239, 255] },
+    ]);
+    expect(extractColors(px).map((c) => c.name)).toEqual(["navy", "white"]);
+  });
+});

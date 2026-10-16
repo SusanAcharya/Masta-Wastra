@@ -82,6 +82,9 @@
   --t-hero: 640ms;
 
   --radius: 2px;
+  /* Paper doll figure: a dress form in the theme's own surface tones. */
+  --figure: var(--surface-3);
+  --figure-line: var(--line-strong);
   --page-x: 20px; /* phone margin */
   --control-h: 48px; /* density air, phone */
   --tabbar-clear: 140px; /* room for the floating tab bar */

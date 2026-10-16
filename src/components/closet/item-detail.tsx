@@ -195,7 +195,7 @@ export function ItemDetail({ id, onClose }: { id: string; onClose: () => void })
             <ul className="-mx-5 mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-2">
               {others.map((o) => (
                 <li key={o.signature} className="w-[220px] shrink-0 snap-start overflow-hidden rounded-ui border border-line bg-surface">
-                  <OutfitCard dealt={o} items={byId} />
+                  <OutfitCard dealt={o} items={byId} view={settings?.outfitView ?? "figure"} body={settings?.figure ?? "female"} mini />
                   <p className="px-3 pt-2 pb-3 text-[13px] leading-[1.4] text-ink-2">{o.reason}</p>
                 </li>
               ))}
